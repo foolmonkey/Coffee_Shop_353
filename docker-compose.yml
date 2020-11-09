@@ -1,0 +1,17 @@
+version: "3"
+services:
+  app:
+    build: ./node
+    depends_on:
+      - db
+    container_name: my-app
+    ports:
+      - "80:8080"
+    volumes:
+      - ./node:/usr/src/app
+
+  db:
+    build: ./database
+    container_name: mysql
+    volumes:
+      - ./mysql1:/usr/src/db
