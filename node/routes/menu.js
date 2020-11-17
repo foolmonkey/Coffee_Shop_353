@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: true }));
 
 // menu
 router.get("/create", (req, res) => {

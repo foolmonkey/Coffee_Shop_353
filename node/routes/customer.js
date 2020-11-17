@@ -2,11 +2,11 @@ var express = require("express");
 var router = express.Router();
 
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: true }));
 
 // customers
-app.get("/create", (req, res) => {
-  var sql = `CREATE TABLE Customers(ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Phone VARCHAR(30), Email VARCHAR(100), Address VARCHAR(255), OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP(), CompletionDate TIMESTAMP);`;
+router.get("/create", (req, res) => {
+  var sql = `CREATE TABLE Customers(ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Phone INT, Email VARCHAR(100), Address VARCHAR(255), OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP(), CompletionDate TIMESTAMP);`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -14,7 +14,7 @@ app.get("/create", (req, res) => {
   res.send(`Created customer table`);
 });
 
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
   var sql = `SELECT * FROM Customers;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   res.send(`Get Customers`);
 });
 
-app.get("/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   var sql = `SELECT * FROM Customers WHERE ID=${req.params.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -32,7 +32,7 @@ app.get("/:id", (req, res) => {
   res.send(`Get Customer with id ${id}`);
 });
 
-app.get("/insert", (req, res) => {
+router.get("/insert", (req, res) => {
   var sql = `INSERT INTO Customers (FirstName, LastName, Phone, Email, Address) VALUES (${req.body.firstName}, ${req.body.lastName}, ${req.body.phone}, ${req.body.email}, ${req.body.address})`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -41,7 +41,7 @@ app.get("/insert", (req, res) => {
   res.send(`create a customer`);
 });
 
-app.get("/delete", (req, res) => {
+router.get("/delete", (req, res) => {
   var sql = `DELETE FROM Customers WHERE ID = ${req.body.id}`;
 
   connection.query(sql, function (err, result) {

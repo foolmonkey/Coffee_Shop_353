@@ -2,6 +2,9 @@
 
 const express = require("express");
 
+// App
+const app = express();
+
 app.use(express.json());
 
 const bodyParser = require("body-parser");
@@ -12,19 +15,16 @@ var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "beans101",
-  database: "Coffee",
+  database: "COFFEE",
 });
 
 const PORT = 8080;
 const HOST = "0.0.0.0";
 
-// App
-const app = express();
-
-var customerRoute = require(".routes/customer.js");
-var employeeRoute = require(".routes/employee.js");
-var menuRoute = require(".routes/menu.js");
-var ordersRoute = require(".routes/orders.js");
+var customerRoute = require("./routes/customer.js");
+var employeeRoute = require("./routes/employee.js");
+var menuRoute = require("./routes/menu.js");
+var ordersRoute = require("./routes/orders.js");
 
 app.use("/customer", customerRoute);
 app.use("/employee", employeeRoute);
