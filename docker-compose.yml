@@ -14,4 +14,4 @@ services:
     build: ./database
     container_name: mysql
     volumes:
-      - ./mysql1:/usr/src/db
+      - ./mysql:/usr/src/db
