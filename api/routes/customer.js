@@ -6,6 +6,9 @@ var router = express.Router();
 const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
 
+//unique id
+const { v4: uuidv4 } = require("uuid");
+
 // customers
 router.get("/", (req, res) => {
   var sql = `SELECT * FROM Customers;`;
@@ -26,7 +29,11 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/insert", (req, res) => {
-  var sql = `INSERT INTO Customers (FirstName, LastName, Phone, Email, Address) VALUES ("${req.body.firstName}", "${req.body.lastName}", "${req.body.phone}", ${req.body.email}, "${req.body.address}")`;
+  var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Phone, Email, Address) VALUES ("${uuidv4()}", "${
+    req.body.firstName
+  }", "${req.body.lastName}", "${req.body.phone}", ${req.body.email}, "${
+    req.body.address
+  }")`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

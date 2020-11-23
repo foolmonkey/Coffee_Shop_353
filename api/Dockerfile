@@ -1,14 +1,13 @@
-FROM node:latest
+FROM node:10-alpine
 
 WORKDIR /usr/src/app
 
-COPY . . 
+COPY package*.json ./
 
 RUN npm install
 
+COPY . . 
+
 EXPOSE 8080
 
-CMD ["node", "server.js"]
-
-# to build for production
-# RUN npm ci --only=production
+CMD ["npm", "start"]

@@ -16,6 +16,9 @@ router.get("/", (req, res) => {
   res.send(`Get Orders`);
 });
 
+// unique id
+const { v4: uuidv4 } = require("uuid");
+
 router.get("/:id", (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderID=${req.params.id};`;
   connection.query(sql, function (err, result) {
@@ -44,7 +47,9 @@ router.get("/closed", (req, res) => {
 });
 
 router.get("/insert", (req, res) => {
-  var sql = `INSERT INTO Orders (CustomerID, ItemName, Quantity) VALUES (${req.body.customerID}, "${req.body.item}", ${req.body.quantity})`;
+  var sql = `INSERT INTO Orders (OrderID, CustomerID, ItemName, Quantity) VALUES ("${uuidv4()}", ${
+    req.body.customerID
+  }, "${req.body.item}", ${req.body.quantity})`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

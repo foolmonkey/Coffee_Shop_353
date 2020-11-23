@@ -20,17 +20,6 @@ app.all("*", function (req, res, next) {
   next();
 });
 
-// routes
-var customerRoute = require("./routes/customer.js");
-var employeeRoute = require("./routes/employee.js");
-var menuRoute = require("./routes/menu.js");
-var ordersRoute = require("./routes/orders.js");
-
-app.use("/customer", customerRoute);
-app.use("/employee", employeeRoute);
-app.use("/menu", menuRoute);
-app.use("/orders", ordersRoute);
-
 // mysql database
 const mysql = require("mysql");
 var connection = mysql.createConnection({
@@ -44,10 +33,23 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) {
     console.log("Could not connect to database!");
+    throw err;
   } else {
     console.log("connected to mysql");
   }
 });
+module.exports = connection;
+
+// routes
+var customerRoute = require("./routes/customer.js");
+var employeeRoute = require("./routes/employee.js");
+var menuRoute = require("./routes/menu.js");
+var ordersRoute = require("./routes/orders.js");
+
+app.use("/customer", customerRoute);
+app.use("/employee", employeeRoute);
+app.use("/menu", menuRoute);
+app.use("/orders", ordersRoute);
 
 // endpoints
 app.get("/", (req, res) => {
@@ -73,6 +75,4 @@ app.get("/end", (req, res) => {
 
 app.listen(PORT, HOST);
 
-console.log(`Running on http://${HOST}:${PORT}`);
-
-module.exports = { connection: connection };
+console.log(`Running on PORT ${PORT}, on http://localhost/`);
