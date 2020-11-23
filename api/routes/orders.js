@@ -29,11 +29,29 @@ router.get("/:id", (req, res) => {
     if (err) throw err;
   });
 
-  res.send(`Get Employeee with id $`);
+  res.send(`Get Order with id ${req.params.id}`);
+});
+
+router.get("/open", (req, res) => {
+  var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NULL;`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+  });
+
+  res.send(`Get Order with id ${req.params.id}`);
+});
+
+router.get("/closed", (req, res) => {
+  var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NOT NULL;`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+  });
+
+  res.send(`Get Order with id ${req.params.id}`);
 });
 
 router.get("/insert", (req, res) => {
-  var sql = `INSERT INTO Orders (FirstName, LastName, Phone, Email) VALUES (${req.body.firstName}, ${req.body.lastName}, ${req.body.phone}, ${req.body.email})`;
+  var sql = `INSERT INTO Orders (CustomerID) VALUES ("${req.body.customerID}")`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -42,7 +60,7 @@ router.get("/insert", (req, res) => {
 });
 
 router.get("/delete", (req, res) => {
-  var sql = `DELETE FROM Orders WHERE ID = ${req.body.id}`;
+  var sql = `DELETE FROM Orders WHERE OrderID = ${req.body.id}`;
 
   connection.query(sql, function (err, result) {
     if (err) throw err;

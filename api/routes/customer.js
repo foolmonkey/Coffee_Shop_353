@@ -41,6 +41,15 @@ router.get("/insert", (req, res) => {
   res.send(`create a customer`);
 });
 
+router.post("/update", (req, res) => {
+  var sql = `UPDATE Customers SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone=${req.body.phone}, Email="${req.body.email}" WHERE ID=${req.body.id};`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+  });
+
+  res.send(`Updated customer`);
+});
+
 router.get("/delete", (req, res) => {
   var sql = `DELETE FROM Customers WHERE ID = ${req.body.id}`;
 

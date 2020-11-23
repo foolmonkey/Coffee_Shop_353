@@ -24,8 +24,8 @@ router.get("/", (req, res) => {
   res.send("Get menu");
 });
 
-router.get("/filter", (req, res) => {
-  var sql = `SELECT * FROM Menu WHERE Category=${req.body.category};`;
+router.get("/:category", (req, res) => {
+  var sql = `SELECT * FROM Menu WHERE Category=${req.params.category};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -36,10 +36,10 @@ router.get("/filter", (req, res) => {
 
 router.post("/insert", (req, res) => {
   var sql = `INSERT INTO Menu (Name, Description, Category, Price) VALUES (
-      ${req.body.name}, 
-      ${req.body.description},
-      ${req.body.category}, 
-      ${req.body.price},
+      "${req.body.name}", 
+      "${req.body.description}",
+      "${req.body.category}", 
+      "${req.body.price}",
       );`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -47,6 +47,19 @@ router.post("/insert", (req, res) => {
   connection.end();
 
   res.send(`Added ${req.body.name} to menu!`);
+});
+
+router.post("/update", (req, res) => {
+  var sql = `UPDATE Menu SET "${req.body.name}", 
+  "${req.body.description}",
+  "${req.body.category}", 
+  "${req.body.price}" 
+  WHERE Name="${req.body.name}";`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+  });
+
+  res.send(`Updated menu item with name ${req.body.name}`);
 });
 
 router.get("/delete", (req, res) => {
