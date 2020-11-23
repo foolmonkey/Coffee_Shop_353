@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <form action="http://localhost:80/create" method="POST">
+        <label for="username">Username </label>
+        <input type="text" name="username" id="username" required></input>
+        <label for="text">Text </label>
+        <textarea type="text" name="text" id="text" required></textarea>
+        <button type="submit" id="submit" value="post">Submit Post</button>
+      </form>
+  
+      <main>          
+        <h1>All Posts</h1>
+
+        <section id="posts">
+        </section>
+      </main>
+  </body>
+</html>

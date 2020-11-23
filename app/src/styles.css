@@ -1,0 +1,82 @@
+body {
+  margin-left: 3rem;
+  margin-top: 2rem;
+  width: 60%;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+}
+
+form {
+  display: flex;
+  flex-flow: column nowrap;
+  row-gap: 0.5rem;
+  max-width: 80%;
+}
+
+form label {
+  font-size: 1.2rem;
+}
+
+form input {
+  max-width: 20rem;
+  font-size: 1.2rem;
+}
+
+form textarea {
+  min-height: 5rem;
+  font-size: 1.2rem;
+}
+
+form button {
+  align-self: flex-end;
+  min-width: 10rem;
+  max-width: 10rem;
+  padding: 0.5rem;
+}
+
+.postsHeader {
+  display: inline-flex;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.refresh {
+  max-height: 2rem;
+  padding: 0.5rem 1rem;
+}
+
+.post {
+  box-sizing: border-box;
+  padding: 0.5rem 2rem;
+  margin-bottom: 1rem;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+}
+
+.postID::before {
+  content: "Post ID: ";
+}
+
+.username {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.username::before {
+  content: "Username:";
+}
+
+.postText {
+  min-height: 4rem;
+}
+
+.postText::before {
+  content: "Message: ";
+}
+
+.timestamp::before {
+  content: "Published: ";
+}

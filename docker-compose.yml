@@ -1,17 +1,31 @@
 version: "3"
 services:
-  app:
-    build: ./node
+  api:
+    build: ./api
     depends_on:
       - db
-    container_name: my-app
+    container_name: api-353
     ports:
       - "80:8080"
+    environment:
+      DATABASE_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: cafe
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: admin
     volumes:
-      - ./node:/usr/src/app
-
+      - ./api:/usr/src/app
+    restart: on-failure
   db:
     build: ./database
-    container_name: mysql
+    container_name: mysql-353
     volumes:
-      - ./mysql:/usr/src/db
+      - ./database:/usr/src/db
+  app:
+    build: ./app
+    container_name: app-353
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/src/app
+    restart: on-failure

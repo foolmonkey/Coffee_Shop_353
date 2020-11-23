@@ -6,7 +6,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // orders
 router.get("/create", (req, res) => {
-  var sql = `CREATE TABLE Orders(OrderID ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, CustomerID int FOREIGN KEY REFERENCES Customers(ID), Item VARCHAR(255) FOREIGN KEY REFERENCES Menu(Name));`;
+  var sql = `CREATE TABLE Orders(OrderID ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, CustomerID int FOREIGN KEY REFERENCES Customers(ID), Item VARCHAR(255) FOREIGN KEY REFERENCES Menu(Name), OrderCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP(), OrderCompleted TIMESTAMP);`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

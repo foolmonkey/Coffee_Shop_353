@@ -1,5 +1,8 @@
 "use strict";
 
+const PORT = 8080;
+const HOST = "0.0.0.0";
+
 const express = require("express");
 
 // App
@@ -10,17 +13,14 @@ app.use(express.json());
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const mysql = require("mysql");
-var connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "beans101",
-  database: "COFFEE",
+// headers
+app.all("*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
 });
 
-const PORT = 8080;
-const HOST = "0.0.0.0";
-
+// routes
 var customerRoute = require("./routes/customer.js");
 var employeeRoute = require("./routes/employee.js");
 var menuRoute = require("./routes/menu.js");
@@ -31,6 +31,25 @@ app.use("/employee", employeeRoute);
 app.use("/menu", menuRoute);
 app.use("/orders", ordersRoute);
 
+// mysql database
+const mysql = require("mysql");
+var connection = mysql.createConnection({
+  host: process.env.DATABASE_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+});
+
+connection.connect(function (err) {
+  if (err) {
+    console.log("Could not connect to database!");
+  } else {
+    console.log("connected to mysql");
+  }
+});
+
+// endpoints
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

@@ -6,7 +6,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // customers
 router.get("/create", (req, res) => {
-  var sql = `CREATE TABLE Customers(ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Phone INT, Email VARCHAR(100), Address VARCHAR(255), OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP(), CompletionDate TIMESTAMP);`;
+  var sql = `CREATE TABLE Customers(ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(255) NOT NULL, LastName VARCHAR(255) NOT NULL, Phone INT, Email VARCHAR(100), Address VARCHAR(255));`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -33,7 +33,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/insert", (req, res) => {
-  var sql = `INSERT INTO Customers (FirstName, LastName, Phone, Email, Address) VALUES (${req.body.firstName}, ${req.body.lastName}, ${req.body.phone}, ${req.body.email}, ${req.body.address})`;
+  var sql = `INSERT INTO Customers (FirstName, LastName, Phone, Email, Address) VALUES ("${req.body.firstName}", "${req.body.lastName}", "${req.body.phone}", "${req.body.email}", "${req.body.address})`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
