@@ -25,13 +25,13 @@ router.get("/:id", (req, res) => {
     if (err) throw err;
   });
 
-  res.send(`Get Customer with id ${id}`);
+  res.send(`Get Customer with id ${req.params.id}`);
 });
 
-router.get("/insert", (req, res) => {
+router.post("/insert", (req, res) => {
   var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Phone, Email, Address) VALUES ("${uuidv4()}", "${
     req.body.firstName
-  }", "${req.body.lastName}", "${req.body.phone}", ${req.body.email}, "${
+  }", "${req.body.lastName}", "${req.body.phone}", "${req.body.email}", "${
     req.body.address
   }")`;
   connection.query(sql, function (err, result) {
@@ -42,7 +42,7 @@ router.get("/insert", (req, res) => {
 });
 
 router.post("/update", (req, res) => {
-  var sql = `UPDATE Customers SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone=${req.body.phone}, Email="${req.body.email}", Address="${req.body.address}" WHERE ID=${req.body.id};`;
+  var sql = `UPDATE Customers SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone="${req.body.phone}", Email="${req.body.email}", Address="${req.body.address}" WHERE CustomerID=${req.body.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

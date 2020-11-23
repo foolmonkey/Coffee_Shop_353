@@ -28,7 +28,7 @@ router.get("/:id", (req, res) => {
   res.send(`Get employee with id ${req.params.id}`);
 });
 
-router.get("/insert", (req, res) => {
+router.post("/insert", (req, res) => {
   var sql = `INSERT INTO Employees (EmployeeID, FirstName, LastName, Phone, Email) VALUES ("${uuidv4()}", ${
     req.body.firstName
   }", "${req.body.lastName}", ${req.body.phone}, "${req.body.email}");`;
@@ -40,7 +40,7 @@ router.get("/insert", (req, res) => {
 });
 
 router.post("/update", (req, res) => {
-  var sql = `UPDATE Employees SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone=${req.body.phone}, Email="${req.body.email}" WHERE EmployeeID=${req.body.id};`;
+  var sql = `UPDATE Employees SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone="${req.body.phone}", Email="${req.body.email}" WHERE EmployeeID=${req.body.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

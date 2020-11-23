@@ -12,7 +12,6 @@ router.get("/", (req, res) => {
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
-  connection.end();
 
   res.send("Get menu");
 });
@@ -22,7 +21,6 @@ router.get("/:category", (req, res) => {
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
-  connection.end();
 
   res.send("Get filtered menu");
 });
@@ -36,7 +34,6 @@ router.post("/insert", (req, res) => {
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
-  connection.end();
 
   res.send(`Added ${req.body.name} to menu!`);
 });
@@ -47,6 +44,7 @@ router.post("/update", (req, res) => {
   "${req.body.category}", 
   "${req.body.price}" 
   WHERE ItemName="${req.body.name}";`;
+
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });

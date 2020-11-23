@@ -46,7 +46,7 @@ router.get("/closed", (req, res) => {
   res.send(`Get Order with id ${req.params.id}`);
 });
 
-router.get("/insert", (req, res) => {
+router.post("/insert", (req, res) => {
   var sql = `INSERT INTO Orders (OrderID, CustomerID, ItemName, Quantity) VALUES ("${uuidv4()}", ${
     req.body.customerID
   }, "${req.body.item}", ${req.body.quantity})`;

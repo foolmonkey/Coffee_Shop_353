@@ -1,72 +1,44 @@
 import React, { useState } from "react";
-import PostList from "./PostList";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./views/Home";
 import "./styles.css";
 
 function App() {
-  const [getPosts, setPosts] = useState([]);
-  const [getUsername, setUsername] = useState("");
-  const [getText, setText] = useState("");
+  const [getMenu, setMenu] = useState([]);
 
   // fetches from api
-  async function fetchPosts() {
-    await fetch("http://localhost:80/read")
+  async function fetchMenu() {
+    await fetch("http://localhost:80/menu/")
       .then((response) => response.json())
-      .then((response) => setPosts(response))
+      .then((response) => setMenu(response))
       .catch((err) => console.error(err));
   }
 
-  async function newPost(e) {
-    e.preventDefault();
-
-    await fetch("http://localhost:80/create", {
-      method: "POST",
-      body: `username=${getUsername}&text=${getText}`,
-      headers: { "Content-type": "application/x-www-form-urlencoded" },
-    })
-      .then(fetchPosts())
-      .then(function () {
-        setUsername("");
-        setText("");
-      });
-  }
-
-  if (getPosts.length < 1) {
+  if (getMenu.length < 1) {
     setTimeout(() => {
-      fetchPosts();
+      fetchMenu();
     }, 500);
   }
 
   return (
     <div className="App">
-      <form onSubmit={newPost}>
-        <label htmlFor="username">Username </label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        ></input>
-        <label htmlFor="text">Text </label>
-        <textarea
-          type="text"
-          name="text"
-          id="text"
-          required
-          onChange={(e) => setText(e.target.value)}
-        ></textarea>
-        <button type="submit" id="submit" value="post">
-          Submit Post
-        </button>
-      </form>
+      <Navbar></Navbar>
+      <Switch>
+        <Route exact path="/home" render={(props) => <Home {...props} />} />
+        <Route exact path="/">
+          <Redirect to="/home" />
+        </Route>
 
-      <div className="postsHeader">
-        <h1>All Posts</h1>
-        <button onClick={fetchPosts} className="refresh">
-          Refresh
-        </button>
-      </div>
-      <PostList data={getPosts} />
+        {/* <Route
+          path="/detail/:name"
+          render={(props) => (
+            <CountryDetail {...props} countriesData={countriesData} />
+          )}
+        />
+
+        <Route component={NoMatch} /> */}
+      </Switch>
     </div>
   );
 }

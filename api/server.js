@@ -33,7 +33,6 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) {
     console.log("Could not connect to database!");
-    throw err;
   } else {
     console.log("connected to mysql");
   }
