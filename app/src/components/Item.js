@@ -17,8 +17,3 @@ function Item({ name, category, description, price, picture, setCart }) {
 }
 
 export default Item;
-
-// ItemName VARCHAR(255) NOT NULL PRIMARY KEY UNIQUE,
-// Category VARCHAR(255) NOT NULL,
-// Price DECIMAL(10, 2) NOT NULL,
-// Description VARCHAR(300)

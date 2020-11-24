@@ -1,12 +1,15 @@
+// css reset
+@import "../node_modules/reset-css/reset.css";
+
 body {
-  margin-left: 3rem;
-  margin-top: 2rem;
-  width: 60%;
+  box-sizing: border-box;
+  width: 100%;
   font-family: "Rubik", Arial, Helvetica, sans-serif;
 }
 
 // navbar
 nav {
   display: flex;
+  justify-content: space-between;
   border: 2px gray solid;
 }

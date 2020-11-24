@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+
+// routes
 import Navbar from "./components/Navbar";
 import Home from "./views/Home";
 import Menu from "./views/Menu";
@@ -7,8 +9,6 @@ import Cart from "./views/Cart";
 import Account from "./views/Account";
 import About from "./views/About";
 import NoMatch from "./views/NoMatch";
-
-import "./styles.css";
 
 function App() {
   const [getMenu, setMenu] = useState([]);
@@ -40,18 +40,18 @@ function App() {
         <Route
           path="/menu"
           render={(props) => (
-            <Menu {...props} data={getMenu} setCart={this.setCart} />
+            <Menu {...props} data={getMenu} setCart={setCart} />
           )}
         />
 
         <Route path="/about" render={(props) => <About />} />
 
-        <Route path="/about" render={(props) => <Account />} />
+        <Route path="/account" render={(props) => <Account />} />
 
         <Route
           path="/cart"
           render={(props) => (
-            <Menu {...props} data={getCart} setCart={this.setCart} />
+            <Menu {...props} data={getCart} setCart={setCart} />
           )}
         />
 
