@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./views/Home";
+import Menu from "./views/Menu";
+import Cart from "./views/Cart";
+import Account from "./views/Account";
+import About from "./views/About";
+import NoMatch from "./views/NoMatch";
+
 import "./styles.css";
 
 function App() {
   const [getMenu, setMenu] = useState([]);
+  const [getCart, setCart] = useState([]);
 
   // fetches from api
   async function fetchMenu() {
@@ -23,21 +30,32 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar></Navbar>
+      <Navbar />
       <Switch>
         <Route exact path="/home" render={(props) => <Home {...props} />} />
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
 
-        {/* <Route
-          path="/detail/:name"
+        <Route
+          path="/menu"
           render={(props) => (
-            <CountryDetail {...props} countriesData={countriesData} />
+            <Menu {...props} data={getMenu} setCart={this.setCart} />
           )}
         />
 
-        <Route component={NoMatch} /> */}
+        <Route path="/about" render={(props) => <About />} />
+
+        <Route path="/about" render={(props) => <Account />} />
+
+        <Route
+          path="/cart"
+          render={(props) => (
+            <Menu {...props} data={getCart} setCart={this.setCart} />
+          )}
+        />
+
+        <Route component={NoMatch} />
       </Switch>
     </div>
   );

@@ -30,7 +30,8 @@ router.post("/insert", (req, res) => {
       "${req.body.name}", 
       "${req.body.description}",
       "${req.body.category}", 
-      "${req.body.price}");`;
+      "${req.body.price}",
+      "${req.body.picture}");`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -42,7 +43,8 @@ router.post("/update", (req, res) => {
   var sql = `UPDATE Menu SET "${req.body.newName}", 
   "${req.body.description}",
   "${req.body.category}", 
-  "${req.body.price}" 
+  "${req.body.price}" ,
+  "${req.body.picture}"
   WHERE ItemName="${req.body.name}";`;
 
   connection.query(sql, function (err, result) {
