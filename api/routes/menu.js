@@ -11,18 +11,16 @@ router.get("/", (req, res) => {
   var sql = `SELECT * FROM Menu;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
+    res.send(result);
   });
-
-  res.send("Get menu");
 });
 
 router.get("/:category", (req, res) => {
   var sql = `SELECT * FROM Menu WHERE Category=${req.params.category};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
+    res.send(result);
   });
-
-  res.send("Get filtered menu");
 });
 
 router.post("/insert", (req, res) => {

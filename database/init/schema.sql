@@ -35,3 +35,17 @@ CONSTRAINT fk_customer_id
 FOREIGN KEY (CustomerID)
 REFERENCES Customers(CustomerID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
+
+-- populating tables
+INSERT INTO Menu (ItemName, Category, Price, Description, Picture) 
+VALUES 
+("Capuccino", "Drinks", 4.50, "Freshly brewed.", ""),
+("Earl Grey Tea", "Drinks", 3.25, "Early morning zen.", ""),
+("Vietnamese Ice Coffee", "Drinks", 5.00, "Caffeine to wake you up!", ""),
+("Grilled Chicken Panini", "Food", 8.50, "Freshly toasted with banana peppers, spinach, and mushrooms", ""),
+("Breakfast Wrap", "Food", 5.00, "Scrambled eggs, hash browns, with a choice of sausage or bacon", ""),
+("Creamy Mushroom Soup", "Food", 4.50, "This is real soup for the soul.", "");
+
+-- INSERT INTO Employees (FirstName, LastName, Phone, Email) 
+-- VALUES 
+-- ("Andy", "Tran", 1234567, "foolmonkey99@gmail.com");

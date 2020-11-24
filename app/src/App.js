@@ -51,7 +51,7 @@ function App() {
         <Route
           path="/cart"
           render={(props) => (
-            <Menu {...props} data={getCart} setCart={setCart} />
+            <Cart {...props} data={getCart} setCart={setCart} />
           )}
         />
 

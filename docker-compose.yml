@@ -20,8 +20,8 @@ services:
     build: ./database
     container_name: mysql-353
     volumes:
-      - ./database/storage:/var/lib/mysql
       - ./database/init:/docker-entrypoint-initdb.d
+      - ./database/storage:/var/lib/mysql
   app:
     build: ./app
     container_name: app-353

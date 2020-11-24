@@ -14,15 +14,16 @@ router.get("/", (req, res) => {
   var sql = `SELECT * FROM Employees;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
-  });
 
-  res.send(`Get employees`);
+    res.send(result);
+  });
 });
 
 router.get("/:id", (req, res) => {
   var sql = `SELECT * FROM Employees WHERE EmployeeID=${req.params.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
+    res.send(result);
   });
 
   res.send(`Get employee with id ${req.params.id}`);

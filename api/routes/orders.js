@@ -6,41 +6,43 @@ var router = express.Router();
 const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
 
+// unique id
+const { v4: uuidv4 } = require("uuid");
+
 // orders
 router.get("/", (req, res) => {
   var sql = `SELECT * FROM Orders;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
+
+    res.send(result);
   });
-
-  res.send(`Get Orders`);
 });
-
-// unique id
-const { v4: uuidv4 } = require("uuid");
 
 router.get("/:id", (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderID=${req.params.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
-  });
 
-  res.send(`Get Order with id ${req.params.id}`);
+    res.send(result);
+  });
 });
 
 router.get("/open", (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NULL;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
-  });
 
-  res.send(`Get Order with id ${req.params.id}`);
+    res.send(result);
+  });
 });
 
 router.get("/closed", (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NOT NULL;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
+
+    res.send(result);
   });
 
   res.send(`Get Order with id ${req.params.id}`);

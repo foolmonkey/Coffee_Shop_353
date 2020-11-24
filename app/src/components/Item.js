@@ -10,6 +10,7 @@ function Item({ name, category, description, price, picture, setCart }) {
       <p className="itemPrice">{price}</p>
 
       <div className="addToCart">
+        <h1>{name}</h1>
         <button type="button">Add to Order</button>
       </div>
     </div>

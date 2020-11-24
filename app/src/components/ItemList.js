@@ -8,11 +8,11 @@ function ItemList({ data, setCart }) {
         return (
           <Item
             key={i}
-            name={item.name}
-            category={item.category}
-            price={item.price}
-            description={item.description}
-            picture={item.picture}
+            name={item.Name}
+            category={item.Category}
+            price={item.Price}
+            description={item.Description}
+            picture={item.Picture}
             setCart={setCart}
           ></Item>
         );
