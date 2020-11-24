@@ -15,7 +15,15 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:category", (req, res) => {
+router.get("/categories", (req, res) => {
+  var sql = `SELECT DISTINCT(Category) FROM Menu;`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+router.get("/categories/:category", (req, res) => {
   var sql = `SELECT * FROM Menu WHERE Category=${req.params.category};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;

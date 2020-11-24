@@ -11,21 +11,38 @@ import About from "./views/About";
 import NoMatch from "./views/NoMatch";
 
 function App() {
+  const [getCategories, setCategories] = useState([]);
   const [getMenu, setMenu] = useState([]);
   const [getCart, setCart] = useState([]);
 
   // fetches from api
   async function fetchMenu() {
+    // let items = [];
+    // getCategories.forEach((element) => {
+    //   fetch(`http://localhost:80/menu/categories/"${element.Category}"`)
+    //     .then((response) => response.json())
+    //     .then((response) => items.push({ [element.Category]: response }))
+    //     .catch((err) => console.error(err));
+    // });
+  }
+
+  async function fetchCategories() {
+    await fetch("http://localhost:80/menu/categories")
+      .then((response) => response.json())
+      .then((response) => setCategories(response))
+      .catch((err) => console.error(err));
+  }
+
+  async function fetchWholeMenu() {
     await fetch("http://localhost:80/menu/")
       .then((response) => response.json())
       .then((response) => setMenu(response))
       .catch((err) => console.error(err));
   }
 
-  if (getMenu.length < 1) {
-    setTimeout(() => {
-      fetchMenu();
-    }, 500);
+  if (getCategories.length < 1) {
+    fetchCategories();
+    fetchWholeMenu();
   }
 
   return (
@@ -40,7 +57,12 @@ function App() {
         <Route
           path="/menu"
           render={(props) => (
-            <Menu {...props} data={getMenu} setCart={setCart} />
+            <Menu
+              {...props}
+              data={getMenu}
+              categories={getCategories}
+              setCart={setCart}
+            />
           )}
         />
 
@@ -51,7 +73,7 @@ function App() {
         <Route
           path="/cart"
           render={(props) => (
-            <Cart {...props} data={getCart} setCart={setCart} />
+            <Cart {...props} getCart={getCart} setCart={setCart} />
           )}
         />
 
