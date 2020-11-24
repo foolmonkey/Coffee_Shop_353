@@ -5,21 +5,27 @@ const Navbar = (props) => {
   return (
     <header>
       <nav>
-        <Link to="/" className="home">
-          <p>Cloud Cafe</p>
-        </Link>
-        <Link to="/menu" className="menuButton">
-          <p>Menu</p>
-        </Link>
-        <Link to="/about" className="aboutButton">
-          <p>About</p>
-        </Link>
-        <Link to="/account" className="accounButton">
-          <p>Account</p>
-        </Link>
-        <Link to="/cart" className="cartButton">
-          <p>Cart</p>
-        </Link>
+        <div>
+          <Link to="/" className="home">
+            <i className="fas fa-cloud"></i>
+            <p>Cloud Cafe</p>
+          </Link>
+        </div>
+        <div>
+          <Link to="/menu" className="menuButton">
+            <p>Menu</p>
+          </Link>
+          <Link to="/about" className="aboutButton">
+            <p>About</p>
+          </Link>
+          <Link to="/account" className="accounButton">
+            <p>Account</p>
+          </Link>
+          <Link to="/cart" className="cartButton">
+            <i class="fas fa-shopping-cart"></i>
+            <p>{props.getCart.length}</p>
+          </Link>
+        </div>
       </nav>
     </header>
   );

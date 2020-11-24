@@ -1,8 +1,11 @@
 // css reset
 @import "../node_modules/reset-css/reset.css";
 
-body {
+* {
   box-sizing: border-box;
+}
+
+body {
   width: 100%;
   font-family: "Rubik", Arial, Helvetica, sans-serif;
 }
@@ -11,5 +14,20 @@ body {
 nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
   border: 2px gray solid;
+
+  a {
+    display: flex;
+    i {
+      padding: 0 0.5rem;
+    }
+  }
+
+  div {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+  }
 }

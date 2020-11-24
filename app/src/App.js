@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
+      <Navbar getCart={getCart} />
       <Switch>
         <Route exact path="/home" render={(props) => <Home {...props} />} />
         <Route exact path="/">
