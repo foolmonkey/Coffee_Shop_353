@@ -4,18 +4,24 @@ const PORT = 8080;
 const HOST = "0.0.0.0";
 
 const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const passportLocal = require("passport-local").Strategy;
+const session = require("express-session");
 
 // App
 const app = express();
 
 app.use(express.json());
 
-const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // headers
 app.all("*", function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
@@ -38,6 +44,25 @@ connection.connect(function (err) {
   }
 });
 module.exports = connection;
+
+// authentication
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    resave: true,
+    secret: "secret101",
+    saveUninitialized: true,
+  })
+);
+app.use(cookieParser("secret101"));
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passportConfig")(passport);
 
 // routes
 var customerRoute = require("./routes/customer.js");
@@ -70,6 +95,50 @@ app.get("/end", (req, res) => {
   });
 
   res.send(`End connection to database`);
+});
+
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user) => {
+    if (err) throw err;
+
+    if (!user) res.send("Incorrect password or username.");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("Successfully authenticated");
+        console.log(req.user);
+      });
+    }
+  })(req, res, next);
+});
+
+app.post("/register", (req, res) => {
+  var sql = `SELECT * FROM Accounts WHERE username="${req.body.username}";`;
+  connection.query(sql, async (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) {
+      res.send("User exists already.");
+    } else {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const hashedUsername = await bcrypt.hash(req.body.username, 10);
+
+      var sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "${req.body.username}", "${hashedPassword}");`;
+      connection.query(sql, async (err, result) => {
+        if (err) throw err;
+      });
+
+      res.send("user created");
+    }
+  });
+});
+
+app.get("/logout", function (req, res) {
+  req.logout();
+  res.send("logged out");
+});
+
+app.get("/user", (req, res) => {
+  res.send(req.user);
 });
 
 app.listen(PORT, HOST);

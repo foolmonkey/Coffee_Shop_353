@@ -22,7 +22,7 @@ const Navbar = (props) => {
             <p>Account</p>
           </Link>
           <Link to="/cart" className="cartButton">
-            <i class="fas fa-shopping-cart"></i>
+            <i className="fas fa-shopping-cart"></i>
             <p>{props.getCart.length}</p>
           </Link>
         </div>

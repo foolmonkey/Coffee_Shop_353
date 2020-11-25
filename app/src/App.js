@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import Axios from "axios";
 
 // routes
 import Navbar from "./components/Navbar";
 import Home from "./views/Home";
 import Menu from "./views/Menu";
 import Cart from "./views/Cart";
-import Account from "./views/Account";
+import Account from "./views/Account/Account";
+import Login from "./views/Account/Login";
+import Register from "./views/Account/Register";
 import About from "./views/About";
 import NoMatch from "./views/NoMatch";
 
@@ -14,17 +17,7 @@ function App() {
   const [getCategories, setCategories] = useState([]);
   const [getMenu, setMenu] = useState([]);
   const [getCart, setCart] = useState([]);
-
-  // fetches from api
-  async function fetchMenu() {
-    // let items = [];
-    // getCategories.forEach((element) => {
-    //   fetch(`http://localhost:80/menu/categories/"${element.Category}"`)
-    //     .then((response) => response.json())
-    //     .then((response) => items.push({ [element.Category]: response }))
-    //     .catch((err) => console.error(err));
-    // });
-  }
+  const [accountData, setAccountData] = useState(null);
 
   async function fetchCategories() {
     await fetch("http://localhost:80/menu/categories")
@@ -33,16 +26,52 @@ function App() {
       .catch((err) => console.error(err));
   }
 
-  async function fetchWholeMenu() {
+  async function fetchMenu() {
     await fetch("http://localhost:80/menu/")
       .then((response) => response.json())
       .then((response) => setMenu(response))
       .catch((err) => console.error(err));
   }
 
+  const isUserLoggedIn = () => {
+    if (localStorage.getItem("user")) {
+      console.log("true");
+      return true;
+    }
+    return false;
+  };
+
+  const getUser = () => {
+    if (!isUserLoggedIn()) {
+      Axios({
+        method: "GET",
+        withCredentials: true,
+        url: "http://localhost:80/user",
+      }).then((res) => {
+        setAccountData(res.data);
+        console.log(res);
+      });
+    } else {
+      setAccountData(localStorage.getItem("user"));
+    }
+  };
+
+  const logout = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:80/logout",
+    })
+      .then((res) => {
+        console.log(res);
+        setAccountData(null);
+      })
+      .then(localStorage.clear());
+  };
+
   if (getCategories.length < 1) {
     fetchCategories();
-    fetchWholeMenu();
+    fetchMenu();
   }
 
   return (
@@ -68,7 +97,41 @@ function App() {
 
         <Route path="/about" render={(props) => <About />} />
 
-        <Route path="/account" render={(props) => <Account />} />
+        <Route
+          path="/account"
+          render={(props) => (
+            <Account
+              {...props}
+              accountData={accountData}
+              setAccountData={setAccountData}
+              logout={logout}
+            />
+          )}
+        />
+
+        <Route
+          path="/login"
+          render={(props) => (
+            <Login
+              {...props}
+              accountData={accountData}
+              setAccountData={setAccountData}
+              getUser={getUser}
+            />
+          )}
+        />
+
+        <Route
+          path="/register"
+          render={(props) => (
+            <Register
+              {...props}
+              accountData={accountData}
+              setAccountData={setAccountData}
+              getUser={getUser}
+            />
+          )}
+        />
 
         <Route
           path="/cart"

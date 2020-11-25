@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  var sql = `SELECT * FROM Customers WHERE CustomerID=${req.params.id};`;
+  var sql = `SELECT * FROM Customers WHERE CustomerID=${req.params.customerID};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
     res.send(result);
@@ -27,11 +27,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/insert", (req, res) => {
-  var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Phone, Email, Address) VALUES ("${uuidv4()}", "${
-    req.body.firstName
-  }", "${req.body.lastName}", "${req.body.phone}", "${req.body.email}", "${
-    req.body.address
-  }")`;
+  var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Phone, Email, Address) VALUES ("${req.body.customerID}", "${req.body.firstName}", "${req.body.lastName}", "${req.body.phone}", "${req.body.email}", "${req.body.address}")`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
