@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Axios from "axios";
 
@@ -17,7 +17,7 @@ function App() {
   const [getCategories, setCategories] = useState([]);
   const [getMenu, setMenu] = useState([]);
   const [getCart, setCart] = useState([]);
-  const [accountData, setAccountData] = useState(null);
+  const [accountData, setAccountData] = useState();
 
   async function fetchCategories() {
     await fetch("http://localhost:80/menu/categories")
@@ -33,26 +33,20 @@ function App() {
       .catch((err) => console.error(err));
   }
 
-  const isUserLoggedIn = () => {
-    if (localStorage.getItem("user")) {
-      console.log("true");
-      return true;
-    }
-    return false;
-  };
-
   const getUser = () => {
-    if (!isUserLoggedIn()) {
+    if (localStorage.getItem("user") == null) {
       Axios({
         method: "GET",
         withCredentials: true,
         url: "http://localhost:80/user",
       }).then((res) => {
         setAccountData(res.data);
-        console.log(res);
+        console.log(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
       });
     } else {
-      setAccountData(localStorage.getItem("user"));
+      let user = JSON.parse(localStorage.getItem("user"));
+      setAccountData(user);
     }
   };
 
@@ -61,18 +55,21 @@ function App() {
       method: "GET",
       withCredentials: true,
       url: "http://localhost:80/logout",
-    })
-      .then((res) => {
-        console.log(res);
-        setAccountData(null);
-      })
-      .then(localStorage.clear());
+    }).then((res) => {
+      console.log(res);
+      setAccountData(null);
+      localStorage.clear();
+    });
   };
 
   if (getCategories.length < 1) {
     fetchCategories();
     fetchMenu();
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <div className="App">

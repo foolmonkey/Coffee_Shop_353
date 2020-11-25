@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { Redirect } from "react-router";
 
 function Account({ logout, accountData, setAccountData }) {
