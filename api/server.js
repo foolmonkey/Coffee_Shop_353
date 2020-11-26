@@ -43,7 +43,7 @@ connection.connect(function (err) {
     console.log("connected to mysql");
   }
 });
-module.exports = connection;
+exports.connection = connection;
 
 // authentication
 app.use(
@@ -64,6 +64,63 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passportConfig")(passport);
 
+function isLoggedIn(req, res, next) {
+  // check if user is logged in
+  if (req.isAuthenticated()) return next();
+
+  // send message
+  res.redirect("/");
+}
+exports.isLoggedIn = isLoggedIn;
+
+function isEmployee(req, res, next) {
+  var sql = `SELECT * FROM EMPLOYEES;`;
+
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    var user = req.user;
+    if (user) {
+      result.forEach((element) => {
+        if (element.EmployeeID == user.Username) {
+          return next();
+        }
+      });
+    }
+  });
+}
+exports.isEmployee = isEmployee;
+
+// create admin account
+async function createAdmin() {
+  var sql = `SELECT * FROM Employees;`;
+  connection.query(sql, async (err, result) => {
+    if (result.length < 1) {
+      const hashedPassword = await bcrypt.hash("beans101", 10);
+      const hashedUsername = await bcrypt.hash("admin", 10);
+      var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES
+        ("admin", "Andy", "Tran", "foolmonkey99@gmail.com")`;
+      connection.query(sql, async (err, result) => {
+        if (err) throw err;
+      });
+
+      var sql = `INSERT INTO Employees (EmployeeID) VALUES ("admin")`;
+      connection.query(sql, async (err, result) => {
+        if (err) throw err;
+      });
+
+      sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "admin", "${hashedPassword}");`;
+      connection.query(sql, async (err, result) => {
+        if (err) throw err;
+      });
+
+      console.log("admin account created");
+    }
+    if (err) throw err;
+  });
+}
+
+createAdmin();
+
 // routes
 var customerRoute = require("./routes/customer.js");
 var employeeRoute = require("./routes/employee.js");
@@ -77,7 +134,7 @@ app.use("/orders", ordersRoute);
 
 // endpoints
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("/");
 });
 
 app.get("/connect", (req, res) => {
@@ -122,7 +179,13 @@ app.post("/register", (req, res) => {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const hashedUsername = await bcrypt.hash(req.body.username, 10);
 
-      var sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "${req.body.username}", "${hashedPassword}");`;
+      var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES 
+      ("${hashedUsername}", "${req.body.firstName}", "${req.body.lastName}", "${req.body.email}")`;
+      connection.query(sql, async (err, result) => {
+        if (err) throw err;
+      });
+
+      sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "${req.body.username}", "${hashedPassword}");`;
       connection.query(sql, async (err, result) => {
         if (err) throw err;
       });

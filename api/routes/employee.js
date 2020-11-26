@@ -1,7 +1,12 @@
-const connection = require("../server");
+const serverMethods = require("../server");
+const connection = serverMethods.connection;
+const isLoggedIn = serverMethods.isLoggedIn;
+const isEmployee = serverMethods.isEmployee;
 
 var express = require("express");
 var router = express.Router();
+
+router.use(isEmployee);
 
 const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -19,34 +24,29 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/select/:id", (req, res) => {
   var sql = `SELECT * FROM Employees WHERE EmployeeID=${req.params.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
     res.send(result);
   });
+});
 
-  res.send(`Get employee with id ${req.params.id}`);
+router.get("/customerID", (req, res) => {
+  var sql = `SELECT CustomerID FROM Customers WHERE Username = "${req.body.username}";`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    res.send(result);
+  });
 });
 
 router.post("/insert", (req, res) => {
-  var sql = `INSERT INTO Employees (EmployeeID, FirstName, LastName, Phone, Email) VALUES ("${uuidv4()}", ${
-    req.body.firstName
-  }", "${req.body.lastName}", ${req.body.phone}, "${req.body.email}");`;
+  var sql = `INSERT INTO Employees (EmployeeID) VALUES ("${req.body.id}");`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
 
   res.send(`Created employee`);
-});
-
-router.post("/update", (req, res) => {
-  var sql = `UPDATE Employees SET FirstName="${req.body.firstName}", LastName="${req.body.lastName}", Phone="${req.body.phone}", Email="${req.body.email}" WHERE EmployeeID=${req.body.id};`;
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-  });
-
-  res.send(`Updated employee`);
 });
 
 router.get("/delete", (req, res) => {

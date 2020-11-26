@@ -1,7 +1,14 @@
 import React from "react";
 import Item from "./Item";
 
-function ItemList({ data, category, setCart }) {
+function ItemList({
+  data,
+  category,
+  getCart,
+  setCart,
+  cartLength,
+  setCartLength,
+}) {
   return (
     <section id="itemList">
       {data
@@ -10,12 +17,11 @@ function ItemList({ data, category, setCart }) {
           return (
             <Item
               key={i}
-              name={item.ItemName}
-              category={item.Category}
-              price={item.Price}
-              description={item.Description}
-              picture={item.Picture}
+              item={item}
+              getCart={getCart}
               setCart={setCart}
+              cartLength={cartLength}
+              setCartLength={setCartLength}
             ></Item>
           );
         })}

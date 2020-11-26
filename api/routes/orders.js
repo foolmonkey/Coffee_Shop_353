@@ -1,4 +1,7 @@
-const connection = require("../server");
+const serverMethods = require("../server");
+const connection = serverMethods.connection;
+const isLoggedIn = serverMethods.isLoggedIn;
+const isEmployee = serverMethods.isEmployee;
 
 var express = require("express");
 var router = express.Router();
@@ -10,7 +13,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const { v4: uuidv4 } = require("uuid");
 
 // orders
-router.get("/", (req, res) => {
+router.get("/", isEmployee, (req, res) => {
   var sql = `SELECT * FROM Orders;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -19,7 +22,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/select/:id", isLoggedIn, (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderID=${req.params.id};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -28,7 +31,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.get("/open", (req, res) => {
+router.get("/open", isEmployee, (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NULL;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -37,7 +40,7 @@ router.get("/open", (req, res) => {
   });
 });
 
-router.get("/closed", (req, res) => {
+router.get("/closed", isEmployee, (req, res) => {
   var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NOT NULL;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -48,7 +51,7 @@ router.get("/closed", (req, res) => {
   res.send(`Get Order with id ${req.params.id}`);
 });
 
-router.post("/insert", (req, res) => {
+router.post("/insert", isLoggedIn, (req, res) => {
   var sql = `INSERT INTO Orders (OrderID, CustomerID, ItemName, Quantity) VALUES ("${uuidv4()}", ${
     req.body.customerID
   }, "${req.body.item}", ${req.body.quantity})`;
@@ -59,7 +62,7 @@ router.post("/insert", (req, res) => {
   res.send(`Created menu table`);
 });
 
-router.get("/delete", (req, res) => {
+router.get("/delete", isEmployee, (req, res) => {
   var sql = `DELETE FROM Orders WHERE OrderID = ${req.body.id}`;
 
   connection.query(sql, function (err, result) {

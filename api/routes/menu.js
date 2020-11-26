@@ -1,4 +1,7 @@
-const connection = require("../server");
+const serverMethods = require("../server");
+const connection = serverMethods.connection;
+const isLoggedIn = serverMethods.isLoggedIn;
+const isEmployee = serverMethods.isEmployee;
 
 var express = require("express");
 var router = express.Router();
@@ -31,13 +34,12 @@ router.get("/categories/:category", (req, res) => {
   });
 });
 
-router.post("/insert", (req, res) => {
+router.post("/insert", isLoggedIn, isEmployee, (req, res) => {
   var sql = `INSERT INTO Menu (ItemName, Description, Category, Price) VALUES (
       "${req.body.name}", 
       "${req.body.description}",
       "${req.body.category}", 
-      "${req.body.price}",
-      "${req.body.picture}");`;
+      "${req.body.price}");`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
@@ -45,12 +47,11 @@ router.post("/insert", (req, res) => {
   res.send(`Added ${req.body.name} to menu!`);
 });
 
-router.post("/update", (req, res) => {
+router.post("/update", isLoggedIn, isEmployee, (req, res) => {
   var sql = `UPDATE Menu SET "${req.body.newName}", 
   "${req.body.description}",
   "${req.body.category}", 
-  "${req.body.price}" ,
-  "${req.body.picture}"
+  "${req.body.price}",
   WHERE ItemName="${req.body.name}";`;
 
   connection.query(sql, function (err, result) {
@@ -60,7 +61,7 @@ router.post("/update", (req, res) => {
   res.send(`Updated menu item with name ${req.body.name}`);
 });
 
-router.get("/delete", (req, res) => {
+router.get("/delete", isLoggedIn, isEmployee, (req, res) => {
   var sql = `DELETE FROM Menu WHERE ItemName ="${req.body.name}"`;
 
   connection.query(sql, function (err, result) {

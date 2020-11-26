@@ -1,26 +1,22 @@
 USE cafe;
 
-CREATE TABLE Customers(CustomerID VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY, 
+CREATE TABLE Customers(CustomerID VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY, 
 FirstName VARCHAR(50) NOT NULL, 
 LastName VARCHAR(50) NOT NULL, 
-Phone VARCHAR(30) NOT NULL, 
 Email VARCHAR(100) UNIQUE NOT NULL, 
+Phone VARCHAR(30), 
 Address VARCHAR(255), 
 CreationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP());
 
-CREATE TABLE Employees(EmployeeID VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY, 
-FirstName VARCHAR(50) NOT NULL, 
-LastName VARCHAR(50) NOT NULL, 
-Phone VARCHAR(30) NOT NULL, 
-Email VARCHAR(100) NOT NULL, 
+CREATE TABLE Employees(EmployeeID VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY, 
 CreationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP());
 
 CREATE TABLE Accounts(
-ID VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY,   
+ID VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY,   
 Username VARCHAR(255) NOT NULL UNIQUE, 
 Password VARCHAR(255) NOT NULL UNIQUE, 
-EmployeeID VARCHAR(50), 
-CustomerID VARCHAR(50),
+EmployeeID VARCHAR(255), 
+CustomerID VARCHAR(255),
 CONSTRAINT fk_employee_id_account
 FOREIGN KEY (EmployeeID)
 REFERENCES Employees(EmployeeID) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -35,8 +31,8 @@ Category VARCHAR(255) NOT NULL,
 Description VARCHAR(300),
 Picture VARCHAR(255));
 
-CREATE TABLE Orders(OrderID VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY, 
-CustomerID VARCHAR(50) NOT NULL, 
+CREATE TABLE Orders(OrderID VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY, 
+CustomerID VARCHAR(255) NOT NULL, 
 ItemName VARCHAR(255) NOT NULL, 
 Quantity INT NOT NULL,
 OrderStatus tinyint NOT NULL, 
@@ -60,7 +56,3 @@ VALUES
 ("Grilled Chicken Panini", "Food", 8.50, "Freshly toasted with banana peppers, spinach, and mushrooms", ""),
 ("Breakfast Wrap", "Food", 5.00, "Scrambled eggs, hash browns, with a choice of sausage or bacon", ""),
 ("Creamy Mushroom Soup", "Food", 4.50, "This is real soup for the soul.", "");
-
--- INSERT INTO Employees (FirstName, LastName, Phone, Email) 
--- VALUES 
--- ("Andy", "Tran", 1234567, "foolmonkey99@gmail.com");

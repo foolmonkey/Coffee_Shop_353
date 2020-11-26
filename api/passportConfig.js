@@ -1,4 +1,5 @@
-const connection = require("./server");
+const serverMethods = require("./server");
+const connection = serverMethods.connection;
 const localStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 

@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import CartList from "../components/CartList";
 
-const Cart = ({ getCart, setCart }) => {
-  const CartItems = () => {
-    if (getCart.length === 0) {
+const Cart = ({ getCart, setCart, cartLength, setCartLength }) => {
+  const CartContainer = () => {
+    if (cartLength < 1) {
       return (
-        <div>
+        <div className="cart">
           <p>Your cart is empty.</p>
           <Link to="/menu">Continue Shopping</Link>
         </div>
+      );
+    } else {
+      return (
+        <CartList
+          getCart={getCart}
+          setCart={setCart}
+          cartLength={cartLength}
+          setCartLength={setCartLength}
+        ></CartList>
       );
     }
   };
@@ -16,7 +26,7 @@ const Cart = ({ getCart, setCart }) => {
   return (
     <main>
       <h1>Cart</h1>
-      <CartItems></CartItems>
+      <CartContainer></CartContainer>
     </main>
   );
 };

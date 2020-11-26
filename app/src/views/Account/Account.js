@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
+import UserDetail from "./UserDetail";
+import EmployeeDetail from "./EmployeeDetail";
 
-function Account({ logout, accountData, setAccountData }) {
+function Account({ logout, accountData, setAccountData, getEmployees }) {
   const AccountInfo = () => {
     return (
       <div>
@@ -9,6 +11,10 @@ function Account({ logout, accountData, setAccountData }) {
 
         <button type="button" onClick={logout}>
           Logout
+        </button>
+
+        <button type="button" onClick={getEmployees}>
+          Verify
         </button>
       </div>
     );

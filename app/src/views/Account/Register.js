@@ -53,7 +53,7 @@ function Register({ getUser, accountData, setAccountData }) {
 
             <input
               placeholder="Email Address"
-              onChange={(e) => email(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
               minLength="10"
               type="text"

@@ -17,6 +17,7 @@ function App() {
   const [getCategories, setCategories] = useState([]);
   const [getMenu, setMenu] = useState([]);
   const [getCart, setCart] = useState([]);
+  const [cartLength, setCartLength] = useState(0);
   const [accountData, setAccountData] = useState();
 
   async function fetchCategories() {
@@ -33,21 +34,32 @@ function App() {
       .catch((err) => console.error(err));
   }
 
+  const getEmployees = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:80/employee",
+    }).then((res) => {
+      console.log(res);
+      if (res.data === "/") {
+        localStorage.setItem("employee", false);
+      } else {
+        localStorage.setItem("employee", true);
+      }
+    });
+  };
+
   const getUser = () => {
-    if (localStorage.getItem("user") == null) {
-      Axios({
-        method: "GET",
-        withCredentials: true,
-        url: "http://localhost:80/user",
-      }).then((res) => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:80/user",
+    })
+      .then((res) => {
         setAccountData(res.data);
         console.log(res.data);
-        localStorage.setItem("user", JSON.stringify(res.data));
-      });
-    } else {
-      let user = JSON.parse(localStorage.getItem("user"));
-      setAccountData(user);
-    }
+      })
+      .then(getEmployees());
   };
 
   const logout = () => {
@@ -58,7 +70,6 @@ function App() {
     }).then((res) => {
       console.log(res);
       setAccountData(null);
-      localStorage.clear();
     });
   };
 
@@ -69,11 +80,17 @@ function App() {
 
   useEffect(() => {
     getUser();
+    if (localStorage.getItem("cart") && localStorage.getItem("cartLength")) {
+      setCart(JSON.parse(localStorage.getItem("cart")));
+      setCartLength(
+        Number.parseInt(JSON.parse(localStorage.getItem("cartLength")))
+      );
+    }
   }, []);
 
   return (
     <div className="App">
-      <Navbar getCart={getCart} />
+      <Navbar getCart={getCart} cartLength={cartLength} />
       <Switch>
         <Route exact path="/home" render={(props) => <Home {...props} />} />
         <Route exact path="/">
@@ -87,7 +104,10 @@ function App() {
               {...props}
               data={getMenu}
               categories={getCategories}
+              getCart={getCart}
               setCart={setCart}
+              cartLength={cartLength}
+              setCartLength={setCartLength}
             />
           )}
         />
@@ -102,6 +122,7 @@ function App() {
               accountData={accountData}
               setAccountData={setAccountData}
               logout={logout}
+              getEmployees={getEmployees}
             />
           )}
         />
@@ -133,7 +154,13 @@ function App() {
         <Route
           path="/cart"
           render={(props) => (
-            <Cart {...props} getCart={getCart} setCart={setCart} />
+            <Cart
+              {...props}
+              getCart={getCart}
+              setCart={setCart}
+              cartLength={cartLength}
+              setCartLength={setCartLength}
+            />
           )}
         />
 

@@ -10,7 +10,10 @@ const Menu = (props) => {
           <ItemList
             data={props.data}
             category={item.Category}
+            getCart={props.getCart}
             setCart={props.setCart}
+            cartLength={props.cartLength}
+            setCartLength={props.setCartLength}
           ></ItemList>
         </section>
       );
