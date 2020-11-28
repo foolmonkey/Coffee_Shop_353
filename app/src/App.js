@@ -55,6 +55,8 @@ function App() {
   };
 
   const getEmployees = async () => {
+    localStorage.removeItem("isEmployee");
+
     await Axios({
       method: "GET",
       withCredentials: true,
@@ -62,6 +64,7 @@ function App() {
     })
       .then((res) => {
         setIsEmployee(true);
+        localStorage.setItem("isEmployee", true);
         getOrdersData();
       })
       .catch((err) => {});
@@ -108,6 +111,7 @@ function App() {
       .then((res) => {
         setAccountData(null);
         setIsEmployee(false);
+        localStorage.removeItem("isEmployee");
         localStorage.removeItem("user");
         localStorage.removeItem("orders");
         localStorage.removeItem("openOrders");

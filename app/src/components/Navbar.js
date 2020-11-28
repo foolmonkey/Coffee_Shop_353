@@ -40,7 +40,7 @@ const Navbar = (props) => {
           >
             <div>
               <i className="fas fa-shopping-cart"></i>
-              <p>{props.cartLength}</p>
+              <p>{props.cartLength > 0 ? props.cartLength : 0}</p>
             </div>
           </NavLink>
         </div>

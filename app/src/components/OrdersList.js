@@ -25,7 +25,10 @@ function OrdersList({ ordersListData, isEmployee }) {
       },
       withCredentials: true,
       url: "http://localhost:80/orders/customer/cancel",
-    }).then((res) => {});
+    }).then((res) => {
+      // refresh all orders
+      console.log(item);
+    });
   };
 
   const setOrderStatusNext = async (item) => {
@@ -47,24 +50,30 @@ function OrdersList({ ordersListData, isEmployee }) {
   };
 
   const OrderButtons = ({ item }) => {
+    const [orderStatus, setOrderStatus] = useState(item.OrderStatus);
+
     let handleCancel = () => {
       cancelOrder(item);
+      setOrderStatus(4);
     };
 
     let handleOrderStatusNext = () => {
       setOrderStatusNext(item);
+      setOrderStatus(orderStatus + 1);
     };
 
-    if (isEmployee && item.OrderStatus < 3) {
+    if (isEmployee && orderStatus < 3) {
       return (
         <button onClick={handleOrderStatusNext}>
-          MARK AS {getOrderStatusMessages(item.OrderStatus + 1)}
+          MARK AS {getOrderStatusMessages(orderStatus + 1)}
         </button>
       );
-    } else if (item.OrderStatus > 2) {
-      return null;
-    } else {
+    } else if (!isEmployee && orderStatus < 1) {
       return <button onClick={handleCancel}>Cancel Order</button>;
+    } else if (!isEmployee && orderStatus === 4) {
+      return <button disabled>Cancelled Order</button>;
+    } else {
+      return null;
     }
   };
 
@@ -92,9 +101,11 @@ function OrdersList({ ordersListData, isEmployee }) {
                 <p className="orderItemCreated">
                   Order Created: {new Date(item.OrderCreated).toLocaleString()}
                 </p>
-                <p className="orderItemStatus">
-                  Status: {getOrderStatusMessages(item.OrderStatus)}
-                </p>
+                {!isEmployee && item.OrderStatus !== 3 ? (
+                  <p className="orderItemStatus">
+                    Status: {getOrderStatusMessages(item.OrderStatus)}
+                  </p>
+                ) : null}
 
                 {item.OrderCompleted ||
                 getOrderStatusMessages(item.OrderStatus) === "CANCELLED" ? (

@@ -7,6 +7,7 @@ var express = require("express");
 var router = express.Router();
 
 const bodyParser = require("body-parser");
+const { query } = require("express");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // menu
@@ -35,23 +36,27 @@ router.get("/categories/:category", async (req, res) => {
 });
 
 router.post("/insert", isLoggedIn, isEmployee, async (req, res) => {
-  var sql = `INSERT INTO Menu (ItemName, Description, Category, Price) VALUES (
+  if (Number.parseFloat(req.body.price) !== NaN) {
+    var sql = `INSERT INTO Menu (ItemName, Description, Category, Price) VALUES (
       "${req.body.name}", 
       "${req.body.description}",
       "${req.body.category}", 
       "${req.body.price}");`;
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-  });
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+    });
 
-  res.send(`Added ${req.body.name} to menu!`);
+    res.send(`Added ${req.body.name} to menu!`);
+  } else {
+    res.send("Couldn't add item to menu.");
+  }
 });
 
 router.post("/update", isLoggedIn, isEmployee, async (req, res) => {
-  var sql = `UPDATE Menu SET "${req.body.newName}", 
-  "${req.body.description}",
-  "${req.body.category}", 
-  "${req.body.price}",
+  var sql = `UPDATE Menu SET ItemName="${req.body.newName}", 
+  Description = "${req.body.description}",
+  Category="${req.body.category}", 
+  Price="${req.body.price}"
   WHERE ItemName="${req.body.name}";`;
 
   connection.query(sql, function (err, result) {
@@ -61,7 +66,7 @@ router.post("/update", isLoggedIn, isEmployee, async (req, res) => {
   res.send(`Updated menu item with name ${req.body.name}`);
 });
 
-router.get("/delete", isLoggedIn, isEmployee, async (req, res) => {
+router.post("/delete", isLoggedIn, isEmployee, async (req, res) => {
   var sql = `DELETE FROM Menu WHERE ItemName ="${req.body.name}"`;
 
   connection.query(sql, function (err, result) {

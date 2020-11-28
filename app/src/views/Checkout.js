@@ -8,8 +8,6 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
   const [orderCompleted, setOrderCompleted] = useState(false);
 
   const createOrder = async () => {
-    console.log("hi");
-
     for (let i = 0; i < getCart.length; i++) {
       let element = getCart[i];
       let itemsProcessed = 0;
@@ -30,8 +28,9 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
           } else if (res.data === "order created") {
             console.log(res);
             itemsProcessed++;
+            console.log("items processed:", itemsProcessed);
 
-            if (itemsProcessed === getCart.length) {
+            if (itemsProcessed > 0) {
               setOrderCompleted(true);
             }
           }

@@ -22,7 +22,7 @@ const Cart = ({ getCart, setCart, cartLength, setCartLength }) => {
           ></CartList>
 
           <button type="button">
-            <Link to="/checkout">Go to Checkout</Link>
+            <Link to="/checkout">Checkout</Link>
           </button>
         </div>
       );
