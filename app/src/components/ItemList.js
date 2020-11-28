@@ -10,7 +10,7 @@ function ItemList({
   setCartLength,
 }) {
   return (
-    <section id="itemList">
+    <section className="itemList">
       {data
         .filter((data) => data.Category.includes(category))
         .map((item, i) => {

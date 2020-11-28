@@ -9,6 +9,7 @@ function CartList({ getCart, setCart, cartLength, setCartLength }) {
           <div key={i} className="cartList">
             <Item
               item={item[0]}
+              itemQuantity={item[1]}
               getCart={getCart}
               setCart={setCart}
               cartLength={cartLength}

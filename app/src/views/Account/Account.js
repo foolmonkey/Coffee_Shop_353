@@ -3,7 +3,13 @@ import { Redirect } from "react-router";
 import UserDetail from "./UserDetail";
 import EmployeeDetail from "./EmployeeDetail";
 
-function Account({ logout, accountData, setAccountData, getEmployees }) {
+function Account({
+  logout,
+  accountData,
+  setAccountData,
+  getEmployees,
+  isEmployee,
+}) {
   const AccountInfo = () => {
     return (
       <div>
@@ -13,21 +19,30 @@ function Account({ logout, accountData, setAccountData, getEmployees }) {
           Logout
         </button>
 
-        <button type="button" onClick={getEmployees}>
-          Verify
-        </button>
+        {isEmployee ? (
+          <EmployeeDetail
+            accountData={accountData}
+            setAccountData={setAccountData}
+            getEmployees={getEmployees}
+          />
+        ) : (
+          <UserDetail
+            accountData={accountData}
+            setAccountData={setAccountData}
+          />
+        )}
       </div>
     );
   };
 
   return (
-    <div>
+    <main>
       {!accountData ? (
-        <Redirect to="/login"></Redirect>
+        <Redirect to="/account/login"></Redirect>
       ) : (
         <AccountInfo></AccountInfo>
       )}
-    </div>
+    </main>
   );
 }
 

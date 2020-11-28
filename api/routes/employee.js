@@ -15,44 +15,44 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const { v4: uuidv4 } = require("uuid");
 
 // employees
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   var sql = `SELECT * FROM Employees;`;
-  connection.query(sql, function (err, result) {
+  connection.query(sql, async function (err, result) {
     if (err) throw err;
 
     res.send(result);
   });
 });
 
-router.get("/select/:id", (req, res) => {
+router.get("/select/:id", async (req, res) => {
   var sql = `SELECT * FROM Employees WHERE EmployeeID=${req.params.id};`;
-  connection.query(sql, function (err, result) {
+  connection.query(sql, async function (err, result) {
     if (err) throw err;
     res.send(result);
   });
 });
 
-router.get("/customerID", (req, res) => {
+router.get("/customerID", async (req, res) => {
   var sql = `SELECT CustomerID FROM Customers WHERE Username = "${req.body.username}";`;
-  connection.query(sql, function (err, result) {
+  connection.query(sql, async function (err, result) {
     if (err) throw err;
     res.send(result);
   });
 });
 
-router.post("/insert", (req, res) => {
+router.post("/insert", async (req, res) => {
   var sql = `INSERT INTO Employees (EmployeeID) VALUES ("${req.body.id}");`;
-  connection.query(sql, function (err, result) {
+  connection.query(sql, async function (err, result) {
     if (err) throw err;
   });
 
   res.send(`Created employee`);
 });
 
-router.get("/delete", (req, res) => {
+router.get("/delete", async (req, res) => {
   var sql = `DELETE FROM Employees WHERE EmployeeID = ${req.body.id};`;
 
-  connection.query(sql, function (err, result) {
+  connection.query(sql, async function (err, result) {
     if (err) throw err;
   });
 

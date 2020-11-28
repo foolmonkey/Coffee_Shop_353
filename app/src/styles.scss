@@ -1,6 +1,51 @@
 // css reset
 @import "../node_modules/reset-css/reset.css";
 
+// Variables
+:root {
+  --color-primary: hsl(0, 0%, 100%);
+  --color-secondary: red;
+  --color-text: hsl(200, 15%, 8%);
+  --color-bg: hsl(0, 0%, 98%);
+  --color-shadow: rgb(124, 124, 124);
+
+  --font-size-h1: 3rem;
+  --font-size-h2: 2rem;
+  --font-size-h3: 1.5rem;
+}
+
+@mixin wrapper($padding: 40px) {
+  padding-left: $padding !important;
+  padding-right: $padding !important;
+}
+
+@mixin shadow-medium {
+  box-shadow: 0rem 0.1rem 0.4rem 0 var(--color-shadow);
+}
+
+@mixin shadow-medium-active {
+  &:active {
+    box-shadow: 0rem 0rem 0.3rem 0 var(--color-shadow);
+    transition-duration: 0.1s;
+  }
+}
+
+@mixin bg-img {
+  box-sizing: border-box;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@mixin button-default($border-radius: 0.3rem, $padding: 0.5rem) {
+  background-color: --color-primary;
+  padding: $padding;
+  border-width: 0.3rem;
+  border-radius: $border-radius;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -12,16 +57,34 @@ body {
 
 // navbar
 nav {
+  @include wrapper();
+  @include shadow-medium();
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
-  border: 2px gray solid;
+  font-size: 1.1rem;
+
+  .navActive {
+    text-decoration: underline;
+  }
 
   a {
+    align-items: center;
+    padding: 2rem 0;
     display: flex;
+
+    // display: flex;
+    text-decoration: none;
     i {
       padding: 0 0.5rem;
+    }
+  }
+
+  .cartButton {
+    div {
+      i {
+        padding-left: 0;
+      }
     }
   }
 
@@ -29,5 +92,62 @@ nav {
     display: flex;
     width: 50%;
     justify-content: space-between;
+  }
+}
+
+// Menu
+main {
+  @include wrapper();
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .categories {
+    display: flex;
+    section {
+      h2 {
+        font-size: 2rem;
+      }
+
+      .itemList {
+        .item {
+          img {
+            width: 60%;
+            height: 15rem;
+            -o-object-fit: cover;
+            object-fit: cover;
+          }
+
+          .itemName {
+          }
+          .itemDescription {
+          }
+          .itemPrice {
+          }
+
+          .itemControls {
+            label {
+              display: flex;
+            }
+            button {
+              @include button-default(1.6rem, 1rem);
+              @include shadow-medium();
+              @include shadow-medium-active();
+              padding: 1rem 1.8rem;
+              background-color: rgb(216, 103, 10);
+              border: none;
+              &:hover {
+              }
+
+              outline: none;
+              // to replace outline none
+              &:focus {
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

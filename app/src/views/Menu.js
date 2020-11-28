@@ -21,9 +21,11 @@ const Menu = (props) => {
   };
 
   return (
-    <main>
+    <main className="menu">
       <h1>Menu</h1>
-      <Category></Category>
+      <div className="categories">
+        <Category></Category>
+      </div>
     </main>
   );
 };

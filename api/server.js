@@ -74,19 +74,19 @@ function isLoggedIn(req, res, next) {
 exports.isLoggedIn = isLoggedIn;
 
 function isEmployee(req, res, next) {
-  var sql = `SELECT * FROM EMPLOYEES;`;
+  if (req.user) {
+    var sql = `SELECT * FROM EMPLOYEES WHERE EmployeeID = "${req.user.Username}";`;
 
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-    var user = req.user;
-    if (user) {
-      result.forEach((element) => {
-        if (element.EmployeeID == user.Username) {
-          return next();
-        }
-      });
-    }
-  });
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+
+      if (result.length > 0) {
+        return next();
+      }
+    });
+  } else {
+    return res.sendStatus(403);
+  }
 }
 exports.isEmployee = isEmployee;
 
@@ -94,26 +94,28 @@ exports.isEmployee = isEmployee;
 async function createAdmin() {
   var sql = `SELECT * FROM Employees;`;
   connection.query(sql, async (err, result) => {
-    if (result.length < 1) {
-      const hashedPassword = await bcrypt.hash("beans101", 10);
-      const hashedUsername = await bcrypt.hash("admin", 10);
-      var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES
+    if (result) {
+      if (result.length < 1) {
+        const hashedPassword = await bcrypt.hash("beans101", 10);
+        const hashedUsername = await bcrypt.hash("admin", 10);
+        var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES
         ("admin", "Andy", "Tran", "foolmonkey99@gmail.com")`;
-      connection.query(sql, async (err, result) => {
-        if (err) throw err;
-      });
+        connection.query(sql, async (err, result) => {
+          if (err) throw err;
+        });
 
-      var sql = `INSERT INTO Employees (EmployeeID) VALUES ("admin")`;
-      connection.query(sql, async (err, result) => {
-        if (err) throw err;
-      });
+        var sql = `INSERT INTO Employees (EmployeeID) VALUES ("admin")`;
+        connection.query(sql, async (err, result) => {
+          if (err) throw err;
+        });
 
-      sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "admin", "${hashedPassword}");`;
-      connection.query(sql, async (err, result) => {
-        if (err) throw err;
-      });
+        sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "admin", "${hashedPassword}");`;
+        connection.query(sql, async (err, result) => {
+          if (err) throw err;
+        });
 
-      console.log("admin account created");
+        console.log("admin account created");
+      }
     }
     if (err) throw err;
   });
@@ -133,11 +135,11 @@ app.use("/menu", menuRoute);
 app.use("/orders", ordersRoute);
 
 // endpoints
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.send("/");
 });
 
-app.get("/connect", (req, res) => {
+app.get("/connect", async (req, res) => {
   connection.connect(function (err) {
     if (err) console.log("Could not connect to database!");
   });
@@ -145,7 +147,7 @@ app.get("/connect", (req, res) => {
   res.send(`Connected to database!`);
 });
 
-app.get("/end", (req, res) => {
+app.get("/end", async (req, res) => {
   connection.end(function (err) {
     if (err) console.log(err);
     console.log("End connection to database");
@@ -154,7 +156,7 @@ app.get("/end", (req, res) => {
   res.send(`End connection to database`);
 });
 
-app.post("/login", (req, res, next) => {
+app.post("/login", async (req, res, next) => {
   passport.authenticate("local", (err, user) => {
     if (err) throw err;
 
@@ -169,7 +171,7 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   var sql = `SELECT * FROM Accounts WHERE username="${req.body.username}";`;
   connection.query(sql, async (err, result) => {
     if (err) throw err;
@@ -180,14 +182,16 @@ app.post("/register", (req, res) => {
       const hashedUsername = await bcrypt.hash(req.body.username, 10);
 
       var sql = `INSERT INTO Customers (CustomerID, FirstName, LastName, Email) VALUES 
-      ("${hashedUsername}", "${req.body.firstName}", "${req.body.lastName}", "${req.body.email}")`;
+      ("${req.body.username}", "${req.body.firstName}", "${req.body.lastName}", "${req.body.email}")`;
       connection.query(sql, async (err, result) => {
         if (err) throw err;
+        console.log("insert customer");
       });
 
       sql = `INSERT INTO Accounts(ID, Username, Password) VALUES("${hashedUsername}", "${req.body.username}", "${hashedPassword}");`;
       connection.query(sql, async (err, result) => {
         if (err) throw err;
+        console.log("insert acc");
       });
 
       res.send("user created");
@@ -195,13 +199,17 @@ app.post("/register", (req, res) => {
   });
 });
 
-app.get("/logout", function (req, res) {
+app.get("/logout", async (req, res) => {
   req.logout();
   res.send("logged out");
 });
 
 app.get("/user", (req, res) => {
-  res.send(req.user);
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.end();
+  }
 });
 
 app.listen(PORT, HOST);

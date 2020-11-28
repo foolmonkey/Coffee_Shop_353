@@ -13,12 +13,18 @@ const Cart = ({ getCart, setCart, cartLength, setCartLength }) => {
       );
     } else {
       return (
-        <CartList
-          getCart={getCart}
-          setCart={setCart}
-          cartLength={cartLength}
-          setCartLength={setCartLength}
-        ></CartList>
+        <div>
+          <CartList
+            getCart={getCart}
+            setCart={setCart}
+            cartLength={cartLength}
+            setCartLength={setCartLength}
+          ></CartList>
+
+          <button type="button">
+            <Link to="/checkout">Go to Checkout</Link>
+          </button>
+        </div>
       );
     }
   };

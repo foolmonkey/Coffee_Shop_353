@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // menu
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   var sql = `SELECT * FROM Menu;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/categories", (req, res) => {
+router.get("/categories", async (req, res) => {
   var sql = `SELECT DISTINCT(Category) FROM Menu;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -26,7 +26,7 @@ router.get("/categories", (req, res) => {
   });
 });
 
-router.get("/categories/:category", (req, res) => {
+router.get("/categories/:category", async (req, res) => {
   var sql = `SELECT * FROM Menu WHERE Category=${req.params.category};`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
@@ -34,7 +34,7 @@ router.get("/categories/:category", (req, res) => {
   });
 });
 
-router.post("/insert", isLoggedIn, isEmployee, (req, res) => {
+router.post("/insert", isLoggedIn, isEmployee, async (req, res) => {
   var sql = `INSERT INTO Menu (ItemName, Description, Category, Price) VALUES (
       "${req.body.name}", 
       "${req.body.description}",
@@ -47,7 +47,7 @@ router.post("/insert", isLoggedIn, isEmployee, (req, res) => {
   res.send(`Added ${req.body.name} to menu!`);
 });
 
-router.post("/update", isLoggedIn, isEmployee, (req, res) => {
+router.post("/update", isLoggedIn, isEmployee, async (req, res) => {
   var sql = `UPDATE Menu SET "${req.body.newName}", 
   "${req.body.description}",
   "${req.body.category}", 
@@ -61,7 +61,7 @@ router.post("/update", isLoggedIn, isEmployee, (req, res) => {
   res.send(`Updated menu item with name ${req.body.name}`);
 });
 
-router.get("/delete", isLoggedIn, isEmployee, (req, res) => {
+router.get("/delete", isLoggedIn, isEmployee, async (req, res) => {
   var sql = `DELETE FROM Menu WHERE ItemName ="${req.body.name}"`;
 
   connection.query(sql, function (err, result) {

@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
-function Item({ item, getCart, setCart, cartLength, setCartLength, cartPage }) {
+function Item({
+  item,
+  getCart,
+  setCart,
+  cartLength,
+  setCartLength,
+  cartPage,
+  itemQuantity,
+}) {
   const [quantity, setQuantity] = useState(1);
 
   const addItemToCart = () => {
@@ -8,7 +16,6 @@ function Item({ item, getCart, setCart, cartLength, setCartLength, cartPage }) {
     let cartCopy = getCart;
 
     if (cartLength > 0) {
-      console.log("hi");
       let foundInCart = false;
 
       for (let i = 0; i < cartCopy.length; i++) {
@@ -24,13 +31,13 @@ function Item({ item, getCart, setCart, cartLength, setCartLength, cartPage }) {
         cartCopy.push(orderItem);
       }
 
-      setCartLength(cartLength + quantity);
-      localStorage.setItem("cartLength", cartLength + quantity);
+      let len = Number.parseInt(cartLength) + Number.parseInt(quantity);
+      setCartLength(len);
+      localStorage.setItem("cartLength", len);
     } else {
       cartCopy.push(orderItem);
       setCartLength(quantity);
       localStorage.setItem("cartLength", quantity);
-      console.log("hix");
     }
 
     setCart(cartCopy);
@@ -54,18 +61,79 @@ function Item({ item, getCart, setCart, cartLength, setCartLength, cartPage }) {
     localStorage.setItem("cartLength", newLength);
   };
 
-  const ItemComponents = () => {
-    if (!cartPage) {
-      return (
-        <div>
-          <p>Quantity</p>
+  const handleNumericalInput = (e) => {
+    setQuantity(e.target.value.replace(/\D/, ""));
+  };
+
+  const handleCartQuantity = async (e) => {
+    let quantityCopy = e.target.value.replace(/\D/, "");
+    let cartCopy = [...getCart];
+    cartCopy.map((items) => {
+      cartCopy.find((ele) => ele[0] === item)[1] = Number.parseInt(
+        quantityCopy
+      );
+      setCartLength(cartLength + Number.parseInt(quantityCopy - quantity));
+    });
+
+    setQuantity(quantityCopy);
+
+    return cartCopy;
+  };
+
+  let handleCart = async (e) => {
+    const copy = await handleCartQuantity(e);
+    setCart(copy);
+    localStorage.setItem("cart", JSON.stringify(getCart));
+  };
+
+  const CartControls = () => {
+    return (
+      <div className="itemControls">
+        <label>
+          Quantity
           <input
-            type="number"
+            type="text"
             min="1"
             max="100"
-            defaultValue="1"
-            onChange={(e) => setQuantity(e.target.value)}
+            value={quantity}
+            onInput={(e) => handleCart(e)}
           ></input>
+        </label>
+
+        <button type="button" onClick={removeItemFromCart}>
+          Remove
+        </button>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if (cartPage) {
+      setQuantity(itemQuantity);
+    } else {
+      setQuantity(1);
+    }
+  }, []);
+
+  return (
+    <div className="item">
+      <img src={`/images/${item.ItemName}.jpg`} alt="thumbnail"></img>
+      <p className="itemName">{item.ItemName}</p>
+      <p className="itemDescription">{item.Description}</p>
+      <p className="itemPrice">{item.Price}</p>
+
+      {!cartPage ? (
+        <div className="itemControls">
+          <label>
+            Quantity
+            <input
+              type="text"
+              min="1"
+              max="100"
+              value={quantity}
+              onInput={(e) => handleNumericalInput(e)}
+            ></input>
+          </label>
 
           <button
             type="button"
@@ -75,36 +143,9 @@ function Item({ item, getCart, setCart, cartLength, setCartLength, cartPage }) {
             ADD TO CART
           </button>
         </div>
-      );
-    } else {
-      return (
-        <div>
-          <input
-            type="number"
-            min="1"
-            max="100"
-            // defaultValue={item[1]}
-            // onChange={(e) => setQuantity(e.target.value)}
-          ></input>
-
-          <button type="button" onClick={removeItemFromCart}>
-            Remove
-          </button>
-        </div>
-      );
-    }
-  };
-
-  return (
-    <div className="item">
-      <img src={`/images/${item.ItemName}.jpg`} alt="thumbnail"></img>
-      <p className="itemName">{item.ItemName}</p>
-      <p className="itemDescription">{item.Description}</p>
-      <p className="itemPrice">{item.Price}</p>
-
-      <div>
-        <ItemComponents></ItemComponents>
-      </div>
+      ) : (
+        <CartControls></CartControls>
+      )}
     </div>
   );
 }

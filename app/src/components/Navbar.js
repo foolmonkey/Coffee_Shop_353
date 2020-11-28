@@ -1,30 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = (props) => {
   return (
     <header>
       <nav>
         <div>
-          <Link to="/" className="home">
+          <NavLink to="/" activeClassName="navActive" className="home">
             <i className="fas fa-cloud"></i>
             <p>Cloud Cafe</p>
-          </Link>
+          </NavLink>
         </div>
         <div>
-          <Link to="/menu" className="menuButton">
+          <NavLink
+            to="/menu"
+            activeClassName="navActive"
+            className="menuButton"
+          >
             <p>Menu</p>
-          </Link>
-          <Link to="/about" className="aboutButton">
+          </NavLink>
+          <NavLink
+            to="/about"
+            activeClassName="navActive"
+            className="aboutButton"
+          >
             <p>About</p>
-          </Link>
-          <Link to="/account" className="accounButton">
+          </NavLink>
+          <NavLink
+            to="/account"
+            activeClassName="navActive"
+            className="accounButton"
+          >
             <p>Account</p>
-          </Link>
-          <Link to="/cart" className="cartButton">
-            <i className="fas fa-shopping-cart"></i>
-            <p>{props.cartLength}</p>
-          </Link>
+          </NavLink>
+          <NavLink
+            to="/cart"
+            activeClassName="cartActive"
+            className="cartButton"
+          >
+            <div>
+              <i className="fas fa-shopping-cart"></i>
+              <p>{props.cartLength}</p>
+            </div>
+          </NavLink>
         </div>
       </nav>
     </header>

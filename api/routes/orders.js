@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 const serverMethods = require("../server");
 const connection = serverMethods.connection;
 const isLoggedIn = serverMethods.isLoggedIn;
@@ -32,7 +34,7 @@ router.get("/select/:id", isLoggedIn, (req, res) => {
 });
 
 router.get("/open", isEmployee, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NULL;`;
+  var sql = `SELECT * FROM Orders WHERE OrderStatus < 3 ORDER BY OrderCreated DESC;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -41,25 +43,86 @@ router.get("/open", isEmployee, (req, res) => {
 });
 
 router.get("/closed", isEmployee, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE OrderCompleted IS NOT NULL;`;
+  var sql = `SELECT * FROM Orders WHERE OrderStatus > 2 ORDER BY OrderCreated DESC;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
     res.send(result);
   });
+});
 
-  res.send(`Get Order with id ${req.params.id}`);
+router.post("/update/next", isEmployee, (req, res) => {
+  var orderStatusNow = Number.parseInt(req.body.orderStatus) + 1;
+  if (req.body.orderStatus == 0) {
+    orderStatusNow = 1;
+    console.log("req 1");
+  }
+  var orderCompletedNow = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  var sql = `UPDATE Orders SET OrderStatus=${orderStatusNow} WHERE (OrderID="${req.body.orderID}" AND CustomerID="${req.body.username}" AND OrderStatus=${req.body.orderStatus} AND ItemName="${req.body.itemName}" AND Quantity=${req.body.quantity});`;
+
+  if (orderStatusNow == 3) {
+    sql = `UPDATE Orders SET OrderStatus=${orderStatusNow}, OrderCompleted="${orderCompletedNow}"  WHERE (OrderID="${req.body.orderID}" AND OrderStatus=${req.body.orderStatus} AND CustomerID="${req.body.username}" AND ItemName="${req.body.itemName}" AND Quantity=${req.body.quantity});`;
+  }
+
+  if (orderStatusNow < 4) {
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("status: ", sql);
+
+      res.send(result);
+    });
+  } else {
+    res.send("Cannot cancel order.");
+  }
 });
 
 router.post("/insert", isLoggedIn, (req, res) => {
-  var sql = `INSERT INTO Orders (OrderID, CustomerID, ItemName, Quantity) VALUES ("${uuidv4()}", ${
-    req.body.customerID
-  }, "${req.body.item}", ${req.body.quantity})`;
+  var sql = `INSERT INTO Orders (OrderID, CustomerID, ItemName, Quantity, OrderStatus) VALUES ("${uuidv4()}", "${
+    req.user.Username
+  }", "${req.body.itemName}", ${req.body.quantity}, 0)`;
+
   connection.query(sql, function (err, result) {
     if (err) throw err;
   });
 
-  res.send(`Created menu table`);
+  res.send(`order created`);
+});
+
+router.get("/customer/open", isLoggedIn, (req, res) => {
+  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus < 3) ORDER BY OrderCreated DESC;`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+
+    res.send(result);
+  });
+});
+
+router.get("/customer/closed", isLoggedIn, (req, res) => {
+  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus > 2) ORDER BY OrderCreated DESC`;
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+
+    res.send(result);
+  });
+});
+
+router.post("/customer/cancel", isLoggedIn, (req, res) => {
+  if (Number.parseInt(req.body.orderStatus) < 3) {
+    var sql = `UPDATE Orders SET OrderStatus = 4, OrderCompleted="${moment(
+      new Date()
+    ).format("YYYY-MM-DD HH:mm:ss")}" WHERE (OrderID="${
+      req.body.orderID
+    }" AND CustomerID="${req.user.Username}" AND ItemName="${
+      req.body.itemName
+    }" AND Quantity=${req.body.quantity})`;
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+
+      res.send(result);
+    });
+  } else {
+    res.send("Cannot cancel order.");
+  }
 });
 
 router.get("/delete", isEmployee, (req, res) => {
