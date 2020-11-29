@@ -62,7 +62,7 @@ function EditItem({ item, addItemButton }) {
 
   // Scrambled eggs, hash browns, with a choice of sausage or bacon.
   return (
-    <div className="item">
+    <div className="item editItem">
       <img src={`/images/${itemName}.jpg`} alt="thumbnail"></img>
       <form>
         <input

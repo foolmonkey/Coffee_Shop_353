@@ -12,7 +12,7 @@ function Account({
 }) {
   const AccountInfo = () => {
     return (
-      <div>
+      <div className="account">
         <p>Welcome back {accountData.Username}!</p>
 
         <button type="button" onClick={logout}>

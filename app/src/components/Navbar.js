@@ -6,12 +6,11 @@ const Navbar = (props) => {
     <header>
       <nav>
         <div>
-          <NavLink to="/" activeClassName="navActive" className="home">
+          <NavLink to="/" className="home">
             <i className="fas fa-cloud"></i>
             <p>Cloud Cafe</p>
           </NavLink>
-        </div>
-        <div>
+
           <NavLink
             to="/menu"
             activeClassName="navActive"
@@ -33,17 +32,14 @@ const Navbar = (props) => {
           >
             <p>Account</p>
           </NavLink>
-          <NavLink
-            to="/cart"
-            activeClassName="cartActive"
-            className="cartButton"
-          >
-            <div>
-              <i className="fas fa-shopping-cart"></i>
-              <p>{props.cartLength > 0 ? props.cartLength : 0}</p>
-            </div>
-          </NavLink>
         </div>
+
+        <NavLink to="/cart" activeClassName="cartActive" className="cartButton">
+          <div>
+            <i className="fas fa-shopping-cart"></i>
+            <p>{props.cartLength > 0 ? props.cartLength : 0}</p>
+          </div>
+        </NavLink>
       </nav>
     </header>
   );

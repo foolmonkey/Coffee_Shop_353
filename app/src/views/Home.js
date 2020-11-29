@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 
 const Home = (props) => {
   return (
-    <main>
+    <main className="homepage">
       <h1>Welcome to Cloud Cafe!</h1>
 
-      <Link to="/Menu">View Menu</Link>
+      <div className="hero">
+        <Link to="/Menu" className="viewMenu">
+          View Menu
+        </Link>
+      </div>
     </main>
   );
 };
