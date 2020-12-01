@@ -64,6 +64,10 @@ function Item({
 
   const handleNumericalInput = (e) => {
     setQuantity(e.target.value.replace(/\D/, ""));
+
+    if (Number.isNaN(e.target.value)) {
+      setQuantity(1);
+    }
   };
 
   const handleCartQuantity = async (e) => {
@@ -90,16 +94,13 @@ function Item({
   const CartControls = () => {
     return (
       <div className="itemControls">
-        <label>
-          Quantity
-          <input
-            type="text"
-            min="1"
-            max="100"
-            value={quantity}
-            onInput={(e) => handleCart(e)}
-          ></input>
-        </label>
+        <input
+          type="text"
+          min="1"
+          max="100"
+          value={quantity}
+          onInput={(e) => handleCart(e)}
+        ></input>
 
         <button type="button" onClick={removeItemFromCart}>
           Remove
@@ -119,14 +120,13 @@ function Item({
   return (
     <div className="item">
       <img src={`/images/${item.ItemName}.jpg`} alt="thumbnail"></img>
-      <p className="itemName">{item.ItemName}</p>
-      <p className="itemDescription">{item.Description}</p>
-      <p className="itemPrice">{item.Price}</p>
+      <div>
+        <p className="itemName">{item.ItemName}</p>
+        <p className="itemDescription">{item.Description}</p>
+        <p className="itemPrice">{"$ " + item.Price.toFixed(2)}</p>
 
-      {!cartPage ? (
-        <div className="itemControls">
-          <label>
-            Quantity
+        {!cartPage ? (
+          <div className="itemControls">
             <input
               type="text"
               min="1"
@@ -134,19 +134,19 @@ function Item({
               value={quantity}
               onInput={(e) => handleNumericalInput(e)}
             ></input>
-          </label>
 
-          <button
-            type="button"
-            onClick={addItemToCart}
-            className="addCartButton"
-          >
-            ADD TO CART
-          </button>
-        </div>
-      ) : (
-        <CartControls></CartControls>
-      )}
+            <button
+              type="button"
+              onClick={addItemToCart}
+              className="addCartButton"
+            >
+              ADD TO CART
+            </button>
+          </div>
+        ) : (
+          <CartControls></CartControls>
+        )}
+      </div>
     </div>
   );
 }

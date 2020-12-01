@@ -6,9 +6,11 @@ const Cart = ({ getCart, setCart, cartLength, setCartLength }) => {
   const CartContainer = () => {
     if (cartLength < 1) {
       return (
-        <div className="cart">
+        <div className="cartEmpty">
           <p>Your cart is empty.</p>
-          <Link to="/menu">Continue Shopping</Link>
+          <Link to="/menu">
+            <button>Continue Shopping</button>
+          </Link>
         </div>
       );
     } else {
@@ -21,9 +23,11 @@ const Cart = ({ getCart, setCart, cartLength, setCartLength }) => {
             setCartLength={setCartLength}
           ></CartList>
 
-          <button type="button">
-            <Link to="/checkout">Checkout</Link>
-          </button>
+          <div className="checkout">
+            <Link to="/checkout">
+              <button type="button"> Checkout </button>
+            </Link>
+          </div>
         </div>
       );
     }

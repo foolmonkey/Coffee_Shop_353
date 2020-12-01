@@ -36,6 +36,16 @@ function EmployeeDetail() {
     getClosedOrders().then(() => {
       setClosedOrders(JSON.parse(localStorage.getItem("closedOrders")));
     });
+
+    setInterval(() => {
+      getOpenOrders().then(() => {
+        setOpenOrders(JSON.parse(localStorage.getItem("openOrders")));
+      });
+
+      getClosedOrders().then(() => {
+        setClosedOrders(JSON.parse(localStorage.getItem("closedOrders")));
+      });
+    }, 4000);
   }, []);
 
   return (

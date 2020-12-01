@@ -35,13 +35,17 @@ function Register({
   };
 
   return (
-    <div className="register">
+    <main className="register">
       {accountData ? (
         <Redirect to="/account" />
       ) : (
         <div>
           <div>
-            <Link to="/account/login">Back</Link>
+            <Link to="/account/login">
+              <p>
+                <i className="fas fa-arrow-left"></i> Back
+              </p>
+            </Link>
           </div>
 
           <h2>Register</h2>
@@ -92,7 +96,7 @@ function Register({
           </form>
         </div>
       )}
-    </div>
+    </main>
   );
 }
 

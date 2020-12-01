@@ -5,9 +5,14 @@ import Axios from "axios";
 const Completed = () => {
   return (
     <main className="completed">
-      <div>Your pickup order has been processed!</div>
+      <div>
+        <h1>Order Successful!</h1>
+        <h2>Your pickup order has been processed!</h2>
+      </div>
 
-      <Link to="/account">View Order Status</Link>
+      <Link to="/account">
+        <button className="viewOrderStatus">View Order Status</button>
+      </Link>
     </main>
   );
 };

@@ -1,7 +1,11 @@
 import React from "react";
 
 function NoMatch() {
-  return <div className="error">Nothing found here...</div>;
+  return (
+    <main className="error">
+      <h2>Nothing found here...</h2>
+    </main>
+  );
 }
 
 export default NoMatch;

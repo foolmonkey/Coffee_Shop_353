@@ -5,12 +5,23 @@ import Axios from "axios";
 function OrdersList({ ordersListData, isEmployee }) {
   const getOrderStatusMessages = (orderStatus) => {
     let orderStatusMessages = [
-      "UNCONFIRMED",
-      "CONFIRMED",
-      "PREPARING",
-      "COMPLETED",
-      "CANCELLED",
+      "Confirming Your Order",
+      "Order Confirmed",
+      "Preparing",
+      "Ready For Pickup",
+      "Completed",
+      "Cancelled",
     ];
+    if (isEmployee) {
+      orderStatusMessages = [
+        "UNCONFIRMED",
+        "CONFIRMED",
+        "PREPARING",
+        "READY FOR PICKUP",
+        "COMPLETED",
+        "CANCELLED",
+      ];
+    }
     return orderStatusMessages[orderStatus];
   };
 
@@ -54,7 +65,7 @@ function OrdersList({ ordersListData, isEmployee }) {
 
     let handleCancel = () => {
       cancelOrder(item);
-      setOrderStatus(4);
+      setOrderStatus(5);
     };
 
     let handleOrderStatusNext = () => {
@@ -62,16 +73,23 @@ function OrdersList({ ordersListData, isEmployee }) {
       setOrderStatus(orderStatus + 1);
     };
 
-    if (isEmployee && orderStatus < 3) {
+    if (isEmployee && orderStatus < 4) {
       return (
-        <button onClick={handleOrderStatusNext}>
+        <button
+          onClick={handleOrderStatusNext}
+          className={"statusEmployee" + orderStatus}
+        >
           MARK AS {getOrderStatusMessages(orderStatus + 1)}
         </button>
       );
     } else if (!isEmployee && orderStatus < 1) {
       return <button onClick={handleCancel}>Cancel Order</button>;
-    } else if (!isEmployee && orderStatus === 4) {
-      return <button disabled>Cancelled Order</button>;
+    } else if (!isEmployee && orderStatus === 5) {
+      return (
+        <button disabled className="cancelled">
+          Cancelled Order
+        </button>
+      );
     } else {
       return null;
     }
@@ -82,12 +100,12 @@ function OrdersList({ ordersListData, isEmployee }) {
       <section className="ordersSection">
         <div className="title">
           <h2>
-            {ordersListData[0].OrderStatus < 3 ? "Open" : "Completed"} Orders
+            {ordersListData[0].OrderStatus < 4 ? "Open" : "Completed"} Orders
           </h2>
           <p>
             {ordersListData.length} order
             {ordersListData.length !== 1 ? "s " : " "}
-            {ordersListData[0].OrderStatus < 3 ? "remaining." : "completed."}
+            {ordersListData[0].OrderStatus < 4 ? "remaining." : "completed."}
           </p>
         </div>
 
@@ -95,27 +113,41 @@ function OrdersList({ ordersListData, isEmployee }) {
           {ordersListData.map((item, i) => {
             return (
               <div className="orderItem" key={i}>
-                <p className="orderItemID">Customer ID: {item.CustomerID}</p>
-                <p className="orderItemName">Item: {item.ItemName}</p>
-                <p className="orderItemquantity">Quantity: {item.Quantity}</p>
-                <p className="orderItemCreated">
-                  Order Created: {new Date(item.OrderCreated).toLocaleString()}
-                </p>
-                {!isEmployee && item.OrderStatus !== 3 ? (
-                  <p className="orderItemStatus">
-                    Status: {getOrderStatusMessages(item.OrderStatus)}
-                  </p>
-                ) : null}
+                <img src={`/images/${item.ItemName}.jpg`} alt="thumbnail"></img>
+                <div className="container">
+                  {!isEmployee ? (
+                    <p className={"orderItemStatus status" + item.OrderStatus}>
+                      {getOrderStatusMessages(item.OrderStatus)}
+                    </p>
+                  ) : (
+                    <>
+                      <p className="orderCustomerID">
+                        Customer ID: {item.CustomerID}
+                      </p>
+                      <p></p>
+                    </>
+                  )}
 
-                {item.OrderCompleted ||
-                getOrderStatusMessages(item.OrderStatus) === "CANCELLED" ? (
-                  <p>
-                    Order Completed:{" "}
-                    {new Date(item.OrderCompleted).toLocaleString()}
+                  <p className="orderItemName">
+                    {item.Quantity} {item.ItemName}
+                    {item.Quantity > 1 ? "s" : null}
                   </p>
-                ) : (
-                  <OrderButtons item={item}></OrderButtons>
-                )}
+                  <p className="orderItemCreated">
+                    Ordered on {new Date(item.OrderCreated).toLocaleString()}
+                  </p>
+
+                  {item.OrderCompleted ||
+                  getOrderStatusMessages(item.OrderStatus) === "CANCELLED" ? (
+                    <p className="orderItemCompleted">
+                      Completed at{" "}
+                      {new Date(item.OrderCompleted).toLocaleTimeString()}
+                    </p>
+                  ) : (
+                    <div>
+                      <OrderButtons item={item}></OrderButtons>
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}

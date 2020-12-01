@@ -34,7 +34,7 @@ router.get("/select/:id", isLoggedIn, (req, res) => {
 });
 
 router.get("/open", isEmployee, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE OrderStatus < 3 ORDER BY OrderCreated DESC;`;
+  var sql = `SELECT * FROM Orders WHERE OrderStatus < 4 ORDER BY OrderCreated DESC;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -43,7 +43,7 @@ router.get("/open", isEmployee, (req, res) => {
 });
 
 router.get("/closed", isEmployee, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE OrderStatus > 2 ORDER BY OrderCreated DESC;`;
+  var sql = `SELECT * FROM Orders WHERE OrderStatus > 3 ORDER BY OrderCreated DESC;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -60,11 +60,11 @@ router.post("/update/next", isEmployee, (req, res) => {
   var orderCompletedNow = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
   var sql = `UPDATE Orders SET OrderStatus=${orderStatusNow} WHERE (OrderID="${req.body.orderID}" AND CustomerID="${req.body.username}" AND OrderStatus=${req.body.orderStatus} AND ItemName="${req.body.itemName}" AND Quantity=${req.body.quantity});`;
 
-  if (orderStatusNow == 3) {
+  if (orderStatusNow == 4) {
     sql = `UPDATE Orders SET OrderStatus=${orderStatusNow}, OrderCompleted="${orderCompletedNow}"  WHERE (OrderID="${req.body.orderID}" AND OrderStatus=${req.body.orderStatus} AND CustomerID="${req.body.username}" AND ItemName="${req.body.itemName}" AND Quantity=${req.body.quantity});`;
   }
 
-  if (orderStatusNow < 4) {
+  if (orderStatusNow < 5) {
     connection.query(sql, function (err, result) {
       if (err) throw err;
       console.log("status: ", sql);
@@ -89,7 +89,7 @@ router.post("/insert", isLoggedIn, (req, res) => {
 });
 
 router.get("/customer/open", isLoggedIn, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus < 3) ORDER BY OrderCreated DESC;`;
+  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus < 4) ORDER BY FIELD(OrderStatus, 3) DESC, OrderCreated DESC;`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -98,7 +98,7 @@ router.get("/customer/open", isLoggedIn, (req, res) => {
 });
 
 router.get("/customer/closed", isLoggedIn, (req, res) => {
-  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus > 2) ORDER BY OrderCreated DESC`;
+  var sql = `SELECT * FROM Orders WHERE (CustomerID="${req.user.Username}" AND OrderStatus > 3  AND OrderStatus != 5) ORDER BY OrderCreated DESC`;
   connection.query(sql, function (err, result) {
     if (err) throw err;
 
@@ -107,8 +107,8 @@ router.get("/customer/closed", isLoggedIn, (req, res) => {
 });
 
 router.post("/customer/cancel", isLoggedIn, (req, res) => {
-  if (Number.parseInt(req.body.orderStatus) < 3) {
-    var sql = `UPDATE Orders SET OrderStatus = 4, OrderCompleted="${moment(
+  if (Number.parseInt(req.body.orderStatus) < 4) {
+    var sql = `UPDATE Orders SET OrderStatus = 5, OrderCompleted="${moment(
       new Date()
     ).format("YYYY-MM-DD HH:mm:ss")}" WHERE (OrderID="${
       req.body.orderID
@@ -119,6 +119,12 @@ router.post("/customer/cancel", isLoggedIn, (req, res) => {
       if (err) throw err;
 
       res.send(result);
+    });
+
+    sql = `DELETE FROM Orders WHERE OrderID = "${req.body.orderID}"`;
+
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
     });
   } else {
     res.send("Cannot cancel order.");

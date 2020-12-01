@@ -52,7 +52,9 @@ function Login({ getUser, accountData, setAccountData, getEmployees, login }) {
             <section className="register">
               <h2>New to Cloud Cafe?</h2>
               <p>Create an account with us!</p>
-              <Link to="/register">Register</Link>
+              <Link to="/register">
+                <button>Register</button>
+              </Link>
             </section>
           </div>
         </div>

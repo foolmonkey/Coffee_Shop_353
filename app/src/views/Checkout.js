@@ -23,7 +23,6 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
       })
         .then((res) => {
           if (res.data === "/") {
-            alert("We were unable to complete your order. Please log in.");
             setRedirectAccount(true);
           } else if (res.data === "order created") {
             console.log(res);
@@ -31,12 +30,13 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
             console.log("items processed:", itemsProcessed);
 
             if (itemsProcessed > 0) {
+              setCart([]);
+              setCartLength([]);
               setOrderCompleted(true);
             }
           }
         })
         .catch((err) => {
-          alert("We were unable to complete your order. Please log in.");
           setRedirectAccount(true);
         });
     }
@@ -65,26 +65,33 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
   };
 
   return (
-    <main>
+    <main className="checkoutPage">
       {orderCompleted ? <Redirect to="/completed"></Redirect> : null}
       {redirectAccount ? <Redirect to="/account"></Redirect> : null}
-      <Link to="/cart">Back to Cart</Link>
+      <Link to="/cart" className="backToCart">
+        <i className="fas fa-arrow-left"></i> Back to Cart
+      </Link>
 
       <h1>Checkout</h1>
 
-      <div>
-        {getCart.map((item, i) => {
-          return (
-            <div key={i} className="cartList">
-              <img
-                src={`/images/${item[0].ItemName}.jpg`}
-                alt="thumbnail"
-              ></img>
-              <p className="itemName">{item[0].ItemName}</p>
-              <p className="itemPrice">{item[0].Price}</p>
-            </div>
-          );
-        })}
+      <div className="cartList">
+        <div>
+          {getCart.map((item, i) => {
+            return (
+              <div key={i} className="item checkoutItem">
+                <img
+                  src={`/images/${item[0].ItemName}.jpg`}
+                  alt="thumbnail"
+                ></img>
+                <div>
+                  <p className="itemName">{item[0].ItemName}</p>
+                  <p className="itemQuantity">Quantity: {item[1]}</p>
+                  <p className="itemPrice">$ {item[0].Price.toFixed(2)}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* <div className="cartInfo">
@@ -96,9 +103,11 @@ const Checkout = ({ getCart, setCart, cartLength, setCartLength }) => {
         <p className="subtotalLabel">$ {getSubtotal}</p>
         <h2>Total</h2>
         <p className="totalLabel">$ {calculateTotal()}</p>
-      </div>
 
-      <button onClick={createOrder}>Confirm Order</button>
+        <button onClick={createOrder} className="confirmOrder">
+          Confirm Order
+        </button>
+      </div>
     </main>
   );
 };

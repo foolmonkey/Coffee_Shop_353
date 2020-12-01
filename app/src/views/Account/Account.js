@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router";
+import { Redirect, Link } from "react-router-dom";
 import UserDetail from "./UserDetail";
 import EmployeeDetail from "./EmployeeDetail";
 
@@ -13,11 +13,28 @@ function Account({
   const AccountInfo = () => {
     return (
       <div className="account">
-        <p>Welcome back {accountData.Username}!</p>
+        {/* <ul className="sidelinks">
+          <li>
+            <Link to="/account/#profile">Profile</Link>
+          </li>
+          <li>
+            <Link to="/account/#open">Orders</Link>
+          </li>
+          <li>
+            <Link to="/account/#open">Open</Link>
+          </li>
+          <li>
+            <Link to="/account/#closed">Closed</Link>
+          </li>
+        </ul> */}
 
-        <button type="button" onClick={logout}>
-          Logout
-        </button>
+        <div className="accountContainer" id="profile">
+          <h2>Welcome back {accountData.Username}!</h2>
+
+          <button type="button" onClick={logout}>
+            Logout
+          </button>
+        </div>
 
         {isEmployee ? (
           <EmployeeDetail

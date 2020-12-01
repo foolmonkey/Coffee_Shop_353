@@ -4,6 +4,7 @@ import Axios from "axios";
 
 // routes
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./views/Home";
 import Menu from "./views/Menu";
 import Cart from "./views/Cart";
@@ -111,6 +112,7 @@ function App() {
       .then((res) => {
         setAccountData(null);
         setIsEmployee(false);
+        setOrders([]);
         localStorage.removeItem("isEmployee");
         localStorage.removeItem("user");
         localStorage.removeItem("orders");
@@ -149,15 +151,24 @@ function App() {
     getUser();
     if (localStorage.getItem("cart") && localStorage.getItem("cartLength")) {
       setCart(JSON.parse(localStorage.getItem("cart")));
-      setCartLength(
-        Number.parseInt(JSON.parse(localStorage.getItem("cartLength")))
-      );
+
+      const cart = JSON.parse(localStorage.getItem("cart"));
+      let quantity = 0;
+      for (let i = 0; i < cart.length; i++) {
+        quantity += cart[i][1];
+      }
+
+      setCartLength(quantity);
     }
   }, []);
 
   return (
     <div className="App">
-      <Navbar getCart={getCart} cartLength={cartLength} />
+      <Navbar
+        getCart={getCart}
+        cartLength={cartLength}
+        isEmployee={isEmployee}
+      />
       <Switch>
         <Route exact path="/home" render={(props) => <Home {...props} />} />
         <Route exact path="/">
@@ -262,6 +273,7 @@ function App() {
 
         <Route component={NoMatch} />
       </Switch>
+      <Footer></Footer>
     </div>
   );
 }

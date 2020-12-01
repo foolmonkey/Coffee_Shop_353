@@ -36,13 +36,27 @@ function UserDetail() {
     getClosedOrders().then(() => {
       setClosedOrders(JSON.parse(localStorage.getItem("closedOrders")));
     });
+
+    setInterval(() => {
+      getOpenOrders().then(() => {
+        setOpenOrders(JSON.parse(localStorage.getItem("openOrders")));
+      });
+
+      getClosedOrders().then(() => {
+        setClosedOrders(JSON.parse(localStorage.getItem("closedOrders")));
+      });
+    }, 5000);
   }, []);
 
   return (
-    <div className="userdetail">
-      <OrdersList ordersListData={openOrders}></OrdersList>
+    <div className="customerOrders" id="orders">
+      <div className="openOrders" id="open">
+        <OrdersList ordersListData={openOrders}></OrdersList>
+      </div>
 
-      <OrdersList ordersListData={closedOrders}></OrdersList>
+      <div className="closedOrders" id="closed">
+        <OrdersList ordersListData={closedOrders}></OrdersList>
+      </div>
     </div>
   );
 }

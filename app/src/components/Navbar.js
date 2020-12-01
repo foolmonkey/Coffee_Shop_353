@@ -8,7 +8,11 @@ const Navbar = (props) => {
         <div>
           <NavLink to="/" className="home">
             <i className="fas fa-cloud"></i>
-            <p>Cloud Cafe</p>
+            {!props.isEmployee ? (
+              <p>Cloud Cafe</p>
+            ) : (
+              <p className="employee">Cloud Cafe Employees</p>
+            )}
           </NavLink>
 
           <NavLink
@@ -33,13 +37,18 @@ const Navbar = (props) => {
             <p>Account</p>
           </NavLink>
         </div>
-
-        <NavLink to="/cart" activeClassName="cartActive" className="cartButton">
-          <div>
-            <i className="fas fa-shopping-cart"></i>
-            <p>{props.cartLength > 0 ? props.cartLength : 0}</p>
-          </div>
-        </NavLink>
+        {!props.isEmployee ? (
+          <NavLink
+            to="/cart"
+            activeClassName="cartActive"
+            className="cartButton"
+          >
+            <div>
+              <i className="fas fa-shopping-cart"></i>
+              <p>{props.cartLength > 0 ? props.cartLength : 0}</p>
+            </div>
+          </NavLink>
+        ) : null}
       </nav>
     </header>
   );

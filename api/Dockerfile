@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["nodemon", "start"]
+CMD ["npm", "start"]

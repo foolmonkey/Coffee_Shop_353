@@ -3,10 +3,10 @@ import Item from "./Item";
 
 function CartList({ getCart, setCart, cartLength, setCartLength }) {
   return (
-    <div>
+    <div className="cartList">
       {getCart.map((item, i) => {
         return (
-          <div key={i} className="cartList">
+          <div key={i}>
             <Item
               item={item[0]}
               itemQuantity={item[1]}
