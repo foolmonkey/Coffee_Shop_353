@@ -9,7 +9,7 @@ services:
       - "80:8080"
     environment:
       DATABASE_HOST: db
-      MYSQL_PORT: 3307
+      MYSQL_PORT: 3306
       MYSQL_DATABASE: cafe
       MYSQL_USER: root
       MYSQL_PASSWORD: beans101
@@ -20,7 +20,7 @@ services:
     build: ./database
     container_name: mysql-353
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - ./database/init:/docker-entrypoint-initdb.d
       - ./database/storage:/var/lib/mysql
