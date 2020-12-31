@@ -9,4 +9,4 @@ Preview (GIF)
 ---------------
 ![](353_demo.gif)
 
-![](353_demo2.gif)
+![](demo2.gif)
