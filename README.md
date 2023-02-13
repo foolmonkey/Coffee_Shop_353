@@ -2,7 +2,7 @@
 
 A simple and elegant cafe website for creating and managing pickup orders.
 
-[More About Project](https://docs.google.com/document/d/1NYFWOZYdl1Sm-Q_gOm00AdWmEpV6wkcPkNkulVgx_qU/edit?usp=sharing)
+[More About Project](https://foolmonkey.notion.site/Cloud-Cafe-dec11f9b82c044c6afc21e78f356c3c9)
 
 ---------------
 Preview (GIF)
